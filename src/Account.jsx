@@ -6,6 +6,7 @@ export default function Account({ session }) {
   const [username, setUsername] = useState(null);
   const [website, setWebsite] = useState(null);
   const [avatar_url, setAvatarUrl] = useState(null);
+  console.log("session", session);
 
   useEffect(() => {
     async function getProfile() {
