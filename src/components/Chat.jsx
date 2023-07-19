@@ -3,7 +3,6 @@ import bot from "../assets/bot.svg";
 import user from "../assets/user.svg";
 
 function Chat() {
-  const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
@@ -16,14 +15,46 @@ function Chat() {
     return `id-${timestamp}-${hexadecimalString}`;
   };
 
+  const typingEffect = (text, callback) => {
+    let index = 0;
+    let message = "";
+    let timerID = setInterval(() => {
+      if (index < text.length) {
+        message += text.charAt(index);
+        callback(message);
+        index++;
+      } else {
+        clearInterval(timerID);
+      }
+    }, 15); // Speed of typing effect
+  };
+
+  const loadingEffect = (callback) => {
+    let dotCount = 0;
+    let timerID = setInterval(() => {
+      let dots = ".".repeat(dotCount);
+      callback(`${dots}`);
+      dotCount = (dotCount + 1) % 4;
+    }, 200); // Speed of loading effect
+    return timerID;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const userMessage = { isAI: false, message: newMessage };
-    const uniqueId = generateUniqueId();
-    const botMessage = { isAI: true, message: "", id: uniqueId };
-    setMessages([...messages, userMessage, botMessage]);
+    const loadingMessage = { isAI: true, message: "", id: generateUniqueId() };
+    setMessages([...messages, userMessage, loadingMessage]);
+    setNewMessage("");
 
-    setLoading(true);
+    let loadingEffectTimer = loadingEffect((loadingText) => {
+      setMessages((prevMessages) =>
+        prevMessages.map((message) =>
+          message.id === loadingMessage.id
+            ? { ...message, message: loadingText }
+            : message
+        )
+      );
+    });
 
     try {
       const response = await fetch("http://localhost:5000", {
@@ -35,27 +66,36 @@ function Chat() {
       });
 
       if (response.ok) {
+        clearInterval(loadingEffectTimer);
         const data = await response.json();
         const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+        const uniqueId = generateUniqueId();
+        const botMessage = { isAI: true, message: "", id: uniqueId };
         setMessages((prevMessages) =>
-          prevMessages.map((message) =>
-            message.id === uniqueId
-              ? { ...message, message: parsedData }
-              : message
-          )
+          prevMessages
+            .filter((message) => message.id !== loadingMessage.id)
+            .concat(botMessage)
         );
-
-        setLoading(false);
+        typingEffect(parsedData, (typedText) => {
+          setMessages((prevMessages) =>
+            prevMessages.map((message) =>
+              message.id === uniqueId
+                ? { ...message, message: typedText }
+                : message
+            )
+          );
+        });
       } else {
+        clearInterval(loadingEffectTimer);
         const err = await response.text();
         console.error(err);
         alert("Something went wrong!");
       }
     } catch (error) {
+      clearInterval(loadingEffectTimer);
       console.error(error);
       alert("Something went wrong!");
     }
-    setNewMessage("");
   };
 
   useEffect(() => {
@@ -80,7 +120,6 @@ function Chat() {
             </div>
           </div>
         ))}
-        {loading && <div>Loading...</div>}
       </div>
       <form onSubmit={handleSubmit}>
         <textarea
