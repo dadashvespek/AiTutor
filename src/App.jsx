@@ -4,6 +4,7 @@ import { supabase } from "./supabaseClient";
 import Auth from "./Auth";
 import Account from "./Account";
 import Landing from "./components/Landing";
+import Chat from "./components/Chat";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -19,12 +20,15 @@ function App() {
   }, []);
 
   return (
-    <div className="container" style={{ padding: "50px 0 100px 0" }}>
+    <div className="container">
       {!session ? (
         <Auth />
       ) : (
         // <Account key={session.user.id} session={session} />
-        <Landing />
+        <div className="flex">
+          <Chat session={session.user} />
+          <Landing />
+        </div>
       )}
     </div>
   );
