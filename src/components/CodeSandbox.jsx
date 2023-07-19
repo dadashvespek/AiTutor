@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import CodeEditorWindow from "./CodeEditorWindow";
 import axios from "axios";
 import { classnames } from "../utils/general";
-import { languageOptions } from "../constants/languageOptions";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -13,53 +11,21 @@ import OutputWindow from "./OutputWindow";
 import CustomInput from "./CustomInput";
 import OutputDetails from "./OutputDetails";
 import ThemeDropdown from "./ThemeDropdown";
-import LanguagesDropdown from "./LanguagesDropdown";
 
-const javascriptDefault = `/**
-* Problem: Binary Search: Search a sorted array for a target value.
-*/
-
-// Time: O(log n)
-const binarySearch = (arr, target) => {
- return binarySearchHelper(arr, target, 0, arr.length - 1);
-};
-
-const binarySearchHelper = (arr, target, start, end) => {
- if (start > end) {
-   return false;
- }
- let mid = Math.floor((start + end) / 2);
- if (arr[mid] === target) {
-   return mid;
- }
- if (arr[mid] < target) {
-   return binarySearchHelper(arr, target, mid + 1, end);
- }
- if (arr[mid] > target) {
-   return binarySearchHelper(arr, target, start, mid - 1);
- }
-};
-
-const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const target = 5;
-console.log(binarySearch(arr, target));
+const javascriptDefault = `
+console.log("hello world");
 `;
 
-const CodeSandbox = () => {
+const CodeSandbox = ({ language }) => {
   const [code, setCode] = useState(javascriptDefault);
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
   const [theme, setTheme] = useState("cobalt");
-  const [language, setLanguage] = useState(languageOptions[0]);
+  console.log("language", language);
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
-
-  const onSelectChange = (sl) => {
-    console.log("selected Option...", sl);
-    setLanguage(sl);
-  };
 
   useEffect(() => {
     if (enterPress && ctrlPress) {
@@ -213,10 +179,10 @@ const CodeSandbox = () => {
         pauseOnHover
       />
 
-      <div className="flex flex-row">
-        <div className="px-4 py-2">
-          <LanguagesDropdown onSelectChange={onSelectChange} />
-        </div>
+      <div className="flex flex-row items-center justify-between px-5">
+        <h1 className="text-2xl font-bold text-white">
+          {language.value.toUpperCase()}
+        </h1>
         <div className="px-4 py-2">
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
         </div>

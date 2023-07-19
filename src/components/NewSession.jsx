@@ -2,31 +2,42 @@ import React, { useState } from "react";
 import Chat from "./Chat";
 import CodeSandbox from "./CodeSandbox";
 import VoiceChat from "./VoiceChat";
+import { languageOptions } from "../constants/languageOptions";
 
 const NewSession = ({ session }) => {
-  const [sessionType, setSessionType] = useState("");
+  const [sessionType, setSessionType] = useState("chat");
   const [difficulty, setDifficulty] = useState("");
-  const [language, setLanguage] = useState("");
+  const [language, setLanguage] = useState({
+    id: 63,
+    name: "JavaScript (Node.js 12.14.0)",
+    label: "JavaScript (Node.js 12.14.0)",
+    value: "javascript",
+  });
   const [chatSession, setChatSession] = useState(null);
 
   const startSession = (event) => {
     event.preventDefault();
+    // if (!!sessionType && !!difficulty && !!language) {
     setChatSession({
       type: sessionType,
       difficulty: difficulty,
       language: language,
     });
+    // }
   };
 
   return (
     <div>
       {chatSession ? (
         <div className="flex">
-          {/* <div className="chat interview screen"> */}
-          <Chat session={session} chatSession={chatSession} />
-          <CodeSandbox />
-          {/* </div> */}
-          {/* <VoiceChat session={session} chatSession={chatSession} /> */}
+          {sessionType === "chat" ? (
+            <div className="chat interview screen">
+              <Chat session={session} chatSession={chatSession} />
+              <CodeSandbox language={language} />
+            </div>
+          ) : (
+            <VoiceChat session={session} chatSession={chatSession} />
+          )}
         </div>
       ) : (
         <div className="flex items-center justify-center min-h-screen">
@@ -75,14 +86,20 @@ const NewSession = ({ session }) => {
             </label>
             <select
               id="language"
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
+              value={language.value}
+              onChange={(e) =>
+                setLanguage(
+                  languageOptions.find((opt) => opt.value === e.target.value)
+                )
+              }
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
               <option value="">Select Language</option>
-              <option value="python">Python</option>
-              <option value="c++">C++</option>
-              <option value="javascript">JavaScript</option>
+              {languageOptions.map((lang) => (
+                <option key={lang.id} value={lang.value}>
+                  {lang.name}
+                </option>
+              ))}
             </select>
             <button
               type="submit"
