@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 import Auth from "./Auth";
 import Account from "./Account";
-import Landing from "./components/Landing";
-import Chat from "./components/Chat";
+import NewSession from "./components/NewSession";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -20,15 +19,14 @@ function App() {
   }, []);
 
   return (
-    <div className="container">
+    <div
+    // className="container"
+    >
       {!session ? (
         <Auth />
       ) : (
         // <Account key={session.user.id} session={session} />
-        <div className="flex">
-          <Chat session={session.user} />
-          <Landing />
-        </div>
+        <NewSession key={session.user.id} session={session} />
       )}
     </div>
   );

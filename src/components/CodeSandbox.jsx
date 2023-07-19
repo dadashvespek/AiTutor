@@ -45,7 +45,7 @@ const target = 5;
 console.log(binarySearch(arr, target));
 `;
 
-const Landing = () => {
+const CodeSandbox = () => {
   const [code, setCode] = useState(javascriptDefault);
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
@@ -255,4 +255,4 @@ const Landing = () => {
     </div>
   );
 };
-export default Landing;
+export default CodeSandbox;
