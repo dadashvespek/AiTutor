@@ -1,59 +1,30 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import bot from "../assets/bot.svg";
 import user from "../assets/user.svg";
+import ChatContext from "../utils/chatContext";
+import {
+  generateUniqueId,
+  loadingEffect,
+  typingEffect,
+} from "../utils/chatUtils";
 
 function Chat({ session }) {
-  const [messages, setMessages] = useState([]);
+  const { messages, setMessages } = useContext(ChatContext);
   const [newMessage, setNewMessage] = useState("");
-
-  console.log(session);
 
   const chatContainer = useRef(null);
 
-  const generateUniqueId = () => {
-    const timestamp = Date.now();
-    const randomNumber = Math.random();
-    const hexadecimalString = randomNumber.toString(16);
-    return `id-${timestamp}-${hexadecimalString}`;
-  };
-
-  const typingEffect = (text, callback) => {
-    let index = 0;
-    let message = "";
-    let timerID = setInterval(() => {
-      if (index < text.length) {
-        message += text.charAt(index);
-        callback(message);
-        index++;
-      } else {
-        clearInterval(timerID);
-      }
-    }, 15); // Speed of typing effect
-  };
-
-  const loadingEffect = (callback) => {
-    let dotCount = 0;
-    let timerID = setInterval(() => {
-      let dots = ".".repeat(dotCount);
-      callback(`${dots}`);
-      dotCount = (dotCount + 1) % 4;
-    }, 200); // Speed of loading effect
-    return timerID;
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const userMessage = { isAI: false, message: newMessage };
+  const sendMessage = async (message, isCodeMessage) => {
+    const userMessage = { isAI: false, message: message };
     const loadingMessage = { isAI: true, message: "", id: generateUniqueId() };
-    setMessages([...messages, userMessage, loadingMessage]);
-    setNewMessage("");
+
+    if (isCodeMessage) setMessages([...messages, loadingMessage]);
+    else setMessages([...messages, userMessage, loadingMessage]);
 
     let loadingEffectTimer = loadingEffect((loadingText) => {
       setMessages((prevMessages) =>
-        prevMessages.map((message) =>
-          message.id === loadingMessage.id
-            ? { ...message, message: loadingText }
-            : message
+        prevMessages.map((msg) =>
+          msg.id === loadingMessage.id ? { ...msg, message: loadingText } : msg
         )
       );
     });
@@ -64,26 +35,24 @@ function Chat({ session }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: newMessage }),
+        body: JSON.stringify({ prompt: message }),
       });
 
       if (response.ok) {
         clearInterval(loadingEffectTimer);
         const data = await response.json();
-        const parsedData = data.bot.trim(); // trims any trailing spaces/'\n'
+        const parsedData = data.bot.trim();
         const uniqueId = generateUniqueId();
         const botMessage = { isAI: true, message: "", id: uniqueId };
         setMessages((prevMessages) =>
           prevMessages
-            .filter((message) => message.id !== loadingMessage.id)
+            .filter((msg) => msg.id !== loadingMessage.id)
             .concat(botMessage)
         );
         typingEffect(parsedData, (typedText) => {
           setMessages((prevMessages) =>
-            prevMessages.map((message) =>
-              message.id === uniqueId
-                ? { ...message, message: typedText }
-                : message
+            prevMessages.map((msg) =>
+              msg.id === uniqueId ? { ...msg, message: typedText } : msg
             )
           );
         });
@@ -100,9 +69,21 @@ function Chat({ session }) {
     }
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await sendMessage(newMessage);
+    setNewMessage("");
+  };
+
   useEffect(() => {
     if (chatContainer.current) {
       chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (messages.length > 0 && !messages[messages.length - 1].isAI) {
+      sendMessage(messages[messages.length - 1].message, true);
     }
   }, [messages]);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CodeEditorWindow from "./CodeEditorWindow";
 import axios from "axios";
 import { classnames } from "../utils/general";
@@ -11,6 +11,8 @@ import OutputWindow from "./OutputWindow";
 import CustomInput from "./CustomInput";
 import OutputDetails from "./OutputDetails";
 import ThemeDropdown from "./ThemeDropdown";
+import ChatContext from "../utils/chatContext";
+import { generateCodeMessage } from "../utils/chatUtils";
 
 const javascriptDefault = `
 console.log("hello world");
@@ -22,7 +24,8 @@ const CodeSandbox = ({ language }) => {
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
   const [theme, setTheme] = useState("cobalt");
-  console.log("language", language);
+  const { messages, setMessages } = useContext(ChatContext);
+  console.log("messages", messages);
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
@@ -117,6 +120,16 @@ const CodeSandbox = ({ language }) => {
         setOutputDetails(response.data);
         showSuccessToast(`Compiled Successfully!`);
         console.log("response.data", response.data);
+        //send message to chat
+        setMessages([
+          ...messages,
+          generateCodeMessage(
+            `here is the user's code ${code} and here is the output from executing their code ${atob(
+              response.data.stdout
+            )}`
+          ),
+        ]);
+        console.log("messages", messages);
         return;
       }
     } catch (err) {
