@@ -3,6 +3,7 @@ import bot from "../assets/bot.svg";
 import user from "../assets/user.svg";
 import ChatContext from "../utils/chatContext";
 import {
+  generateCodeMessage,
   generateUniqueId,
   loadingEffect,
   typingEffect,
@@ -85,13 +86,32 @@ function Chat({ session, chatSession }) {
     if (chatContainer.current) {
       chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
     }
+    console.log(messages);
   }, [messages]);
 
   useEffect(() => {
-    if (messages.length > 0 && !messages[messages.length - 1].isAI) {
+    if (messages.length > 1 && !messages[messages.length - 1].isAI) {
       sendMessage(messages[messages.length - 1].message, true);
+      console.log("Sending message to AI from useffect 1");
     }
   }, [messages]);
+
+  const sendWelcomeMessage = (() => {
+    let hasSentWelcomeMessage = false;
+
+    return (chatSession, sendMessage, messages) => {
+      if (chatSession && messages.length === 0 && !hasSentWelcomeMessage) {
+        const welcomeMessage = generateCodeMessage("Welcome to the session!");
+        sendMessage(welcomeMessage.message);
+        console.log("Sending message to AI from useffect 2");
+        hasSentWelcomeMessage = true;
+      }
+    };
+  })();
+
+  useEffect(() => {
+    sendWelcomeMessage(chatSession, sendMessage, messages);
+  }, [chatSession, sendMessage, messages]);
 
   return (
     <div className="w-1/2 flex flex-col h-screen justify-between">
