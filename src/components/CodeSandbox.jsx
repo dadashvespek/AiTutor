@@ -25,7 +25,6 @@ const CodeSandbox = ({ language }) => {
   const [processing, setProcessing] = useState(null);
   const [theme, setTheme] = useState("cobalt");
   const { messages, setMessages } = useContext(ChatContext);
-  console.log("messages", messages);
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");

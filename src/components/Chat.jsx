@@ -8,11 +8,12 @@ import {
   typingEffect,
 } from "../utils/chatUtils";
 
-function Chat({ session }) {
+function Chat({ session, chatSession }) {
   const { messages, setMessages } = useContext(ChatContext);
   const [newMessage, setNewMessage] = useState("");
-
   const chatContainer = useRef(null);
+
+  const userName = session.user.identities[0].identity_data.name;
 
   const sendMessage = async (message, isCodeMessage) => {
     const userMessage = { isAI: false, message: message };
@@ -35,7 +36,12 @@ function Chat({ session }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: message }),
+        body: JSON.stringify({
+          prompt: message,
+          chatSession: chatSession,
+          session: session,
+          userName: userName,
+        }),
       });
 
       if (response.ok) {
