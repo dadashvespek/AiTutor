@@ -17,6 +17,10 @@ function Chat({ session, chatSession }) {
 
   const userName = session.user.identities[0].identity_data.name;
 
+  useEffect(() => {
+    console.log("messages", messages);
+  }, [messages]);
+
   const sendMessage = async (message, isCodeMessage) => {
     const userMessage = { isAI: false, message: message, isTyping: false };
     const loadingMessage = {
@@ -112,7 +116,9 @@ function Chat({ session, chatSession }) {
 
     return (chatSession, sendMessage, messages) => {
       if (chatSession && messages.length === 0 && !hasSentWelcomeMessage) {
-        const welcomeMessage = generateCodeMessage("Welcome to the session!");
+        const welcomeMessage = generateCodeMessage(
+          `i want you to act as a software engineer interview coach. you will ask me a ${chatSession.difficulty} ${chatSession.language.name} problem, i will provide my code and the ouput in the next prompt, and then we will discuss it after that. my name is ${userName}. lets start!`
+        );
         sendMessage(welcomeMessage.message);
         hasSentWelcomeMessage = true;
       }
