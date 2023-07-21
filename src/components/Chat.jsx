@@ -1,7 +1,8 @@
+// Chat.js
+
 import React, { useState, useEffect, useRef, useContext } from "react";
-import bot from "../assets/bot.svg";
-import user from "../assets/user.svg";
 import ChatContext from "../utils/chatContext";
+import Message from "./Message";
 import {
   generateCodeMessage,
   generateUniqueId,
@@ -17,8 +18,13 @@ function Chat({ session, chatSession }) {
   const userName = session.user.identities[0].identity_data.name;
 
   const sendMessage = async (message, isCodeMessage) => {
-    const userMessage = { isAI: false, message: message };
-    const loadingMessage = { isAI: true, message: "", id: generateUniqueId() };
+    const userMessage = { isAI: false, message: message, isTyping: false };
+    const loadingMessage = {
+      isAI: true,
+      message: "",
+      id: generateUniqueId(),
+      isTyping: true,
+    };
 
     if (isCodeMessage) setMessages([...messages, loadingMessage]);
     else setMessages([...messages, userMessage, loadingMessage]);
@@ -50,7 +56,12 @@ function Chat({ session, chatSession }) {
         const data = await response.json();
         const parsedData = data.bot.trim();
         const uniqueId = generateUniqueId();
-        const botMessage = { isAI: true, message: "", id: uniqueId };
+        const botMessage = {
+          isAI: true,
+          message: "",
+          id: uniqueId,
+          isTyping: true,
+        };
         setMessages((prevMessages) =>
           prevMessages
             .filter((msg) => msg.id !== loadingMessage.id)
@@ -59,7 +70,9 @@ function Chat({ session, chatSession }) {
         typingEffect(parsedData, (typedText) => {
           setMessages((prevMessages) =>
             prevMessages.map((msg) =>
-              msg.id === uniqueId ? { ...msg, message: typedText } : msg
+              msg.id === uniqueId
+                ? { ...msg, message: typedText, isTyping: false }
+                : msg
             )
           );
         });
@@ -86,13 +99,11 @@ function Chat({ session, chatSession }) {
     if (chatContainer.current) {
       chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
     }
-    console.log(messages);
   }, [messages]);
 
   useEffect(() => {
     if (messages.length > 1 && !messages[messages.length - 1].isAI) {
       sendMessage(messages[messages.length - 1].message, true);
-      console.log("Sending message to AI from useffect 1");
     }
   }, [messages]);
 
@@ -103,7 +114,6 @@ function Chat({ session, chatSession }) {
       if (chatSession && messages.length === 0 && !hasSentWelcomeMessage) {
         const welcomeMessage = generateCodeMessage("Welcome to the session!");
         sendMessage(welcomeMessage.message);
-        console.log("Sending message to AI from useffect 2");
         hasSentWelcomeMessage = true;
       }
     };
@@ -117,17 +127,7 @@ function Chat({ session, chatSession }) {
     <div className="w-1/2 flex flex-col h-screen justify-between">
       <div id="chat_container" className="overflow-auto" ref={chatContainer}>
         {messages.map((message, index) => (
-          <div className={`wrapper ${message.isAI ? "ai" : ""}`} key={index}>
-            <div className="chat">
-              <div className="profile">
-                <img
-                  src={message.isAI ? bot : user}
-                  alt={message.isAI ? "bot" : "user"}
-                />
-              </div>
-              <div className="message">{message.message}</div>
-            </div>
-          </div>
+          <Message key={index} messageData={message} />
         ))}
       </div>
       <form onSubmit={handleSubmit}>

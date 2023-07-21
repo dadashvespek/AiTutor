@@ -34,5 +34,6 @@ export const generateCodeMessage = (message) => {
     isAI: false,
     message: message,
     id: generateUniqueId(),
+    isTyping: false,
   };
 };
