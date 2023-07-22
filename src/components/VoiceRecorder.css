@@ -13,7 +13,7 @@ body {
 .accordion-window {
   overflow-y: scroll;
   height: calc(100vh - 80px);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   scrollbar-width: none; /* For Firefox */
 }
 
@@ -22,7 +22,7 @@ body {
 }
 
 .accordion-container {
-  margin-bottom: 1rem;
+  margin-bottom: 0.4rem;
   background: linear-gradient(145deg, #3f3f3f, #1a1a1a);
   border-radius: 5px;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
@@ -35,7 +35,6 @@ body {
   justify-content: center;
   gap: 1rem;
   padding-top: 1rem;
-  /* border-top: 1px solid #ddd; */ /* Commented out to remove the line */
   color: #ffffff;
 }
 

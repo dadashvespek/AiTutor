@@ -40,7 +40,11 @@ const NewSession = ({ session }) => {
                 <CodeSandbox language={language} />
               </div>
             ) : (
+              <div className="chat interview screen">
               <VoiceChat session={session} chatSession={chatSession} />
+              <CodeSandbox language={language} />
+            </div>
+              
             )}
           </div>
         ) : (
