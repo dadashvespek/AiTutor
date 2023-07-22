@@ -1,0 +1,62 @@
+.voice-recorder {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.accordion-window {
+  overflow-y: scroll;
+  height: calc(100vh - 80px);
+  margin-bottom: 2rem;
+  scrollbar-width: none; /* For Firefox */
+}
+
+.accordion-window::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari and Opera */
+}
+
+.accordion-container {
+  margin-bottom: 1rem;
+  background: #f0f0f0;
+  border-radius: 5px;
+  box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.1);
+}
+
+.recording-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.MuiAccordion-root {
+  background-color: transparent;
+  box-shadow: none;
+  border-bottom: none;
+}
+
+.MuiAccordionSummary-root {
+  min-height: 48px;
+  padding: 0;
+  margin: 0;
+}
+
+.MuiAccordionSummary-content {
+  margin: 0.25rem 0;
+}
+
+.MuiAccordionDetails-root {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+audio {
+  width: 100%;
+  max-width: 600px;
+  height: 30px;
+}
