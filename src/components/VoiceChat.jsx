@@ -45,7 +45,7 @@ export default function VoiceRecorder() {
     if (mediaRecorder) {
       mediaRecorder.stop();
       setRecording(false);
-      // setIsServerResponding(true);
+      setIsServerResponding(true);
     }
   };
 
