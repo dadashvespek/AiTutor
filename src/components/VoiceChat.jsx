@@ -75,21 +75,21 @@ export default function VoiceRecorder() {
             className="accordion-container"
             ref={index === originalAudioURLs.length - 1 ? lastAccordionRef : null}  // New: assign the ref to the last accordion
           >
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMore />}>
+            <Accordion className="MuiAccordion-root">
+              <AccordionSummary className="MuiAccordionSummary-root" expandIcon={<ExpandMore />}>
                 <Typography>{`Original Recording ${index + 1}`}</Typography>
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails className="MuiAccordionDetails-root">
                 <audio ref={el => audioEls.current[index * 2] = el} src={url} controls />
               </AccordionDetails>
             </Accordion>
             
             {serverAudioURLs[index] && (
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMore />}>
+              <Accordion className="MuiAccordion-root">
+                <AccordionSummary className="MuiAccordionSummary-root" expandIcon={<ExpandMore />}>
                   <Typography>{`Server Response ${index + 1}`}</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails className="MuiAccordionDetails-root">
                   <audio ref={el => audioEls.current[index * 2 + 1] = el} src={serverAudioURLs[index]} controls />
                 </AccordionDetails>
               </Accordion>
@@ -99,7 +99,7 @@ export default function VoiceRecorder() {
       </Box>
 
       <Box className="recording-control">
-        <IconButton color="primary" aria-label="record" disabled={isServerResponding} onClick={recording ? handleStopRecording : handleStartRecording}>
+        <IconButton className={recording ? "mic-icon-recording" : "mic-icon"} color="primary" aria-label="record" disabled={isServerResponding} onClick={recording ? handleStopRecording : handleStartRecording}>
           {recording ? <Stop fontSize="large" /> : <Mic fontSize="large" />}
         </IconButton>
         <Typography variant="subtitle1" paddingLeft="1rem">
