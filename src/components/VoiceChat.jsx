@@ -3,7 +3,7 @@ import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, 
 import { Mic, Stop, ExpandMore } from '@mui/icons-material';
 import './VoiceRecorder.css';
 
-export default function VoiceRecorder() {
+export default function VoiceRecorder(ChatSession) {
   const [recording, setRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [originalAudioURLs, setOriginalAudioURLs] = useState([]);
@@ -16,16 +16,19 @@ export default function VoiceRecorder() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const newMediaRecorder = new MediaRecorder(stream, {mimeType: 'audio/webm'});
     
-
+    
     newMediaRecorder.start();
 
     newMediaRecorder.ondataavailable = async (e) => {
       const url = URL.createObjectURL(e.data);
       setOriginalAudioURLs(prevURLs => [...prevURLs, url]);
-
       const formData = new FormData();
       formData.append('audio', e.data);
-
+      formData.append('type', ChatSession.chatSession.type);
+      formData.append('difficulty', ChatSession.chatSession.difficulty);
+      formData.append('language', ChatSession.chatSession.language.value);
+    
+      console.log(formData);
       const response = await fetch("http://localhost:5000/audio", {
         method: "POST",
         body: formData
@@ -45,7 +48,7 @@ export default function VoiceRecorder() {
     if (mediaRecorder) {
       mediaRecorder.stop();
       setRecording(false);
-      setIsServerResponding(true);
+      //setIsServerResponding(true);
     }
   };
 
