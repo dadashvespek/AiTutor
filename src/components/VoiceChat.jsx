@@ -11,7 +11,27 @@ export default function VoiceRecorder(ChatSession) {
   const [isServerResponding, setIsServerResponding] = useState(false);
   const audioEls = useRef([]);
   const lastAccordionRef = useRef(null);
+  const sendEmptyAudioFileToServer = async () => {
+    const formData = new FormData();
+    const emptyBlob = new Blob([''], { type: 'audio/webm' });
+    formData.append('audio', emptyBlob);
+    formData.append('type', ChatSession.chatSession.type);
+    formData.append('difficulty', ChatSession.chatSession.difficulty);
+    formData.append('language', ChatSession.chatSession.language.value);
+  
+    const response = await fetch("http://localhost:5000/audio", {
+      method: "POST",
+      body: formData
+    });
 
+    const audioResponse = await response.blob();
+    const responseURL = URL.createObjectURL(audioResponse);
+    setServerAudioURLs(prevURLs => [...prevURLs, responseURL]);
+  };
+
+  useEffect(() => {
+    sendEmptyAudioFileToServer();
+  }, []);
   const handleStartRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const newMediaRecorder = new MediaRecorder(stream, {mimeType: 'audio/webm'});
