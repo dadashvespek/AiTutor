@@ -1,57 +1,41 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
-// import Auth from "./Auth";
 import Account from "./Account";
 import NewSession from "./components/NewSession";
-import { Auth } from "@supabase/auth-ui-react";
+import Auth from "./Auth"
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 function App() {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log(data)
+    supabase.auth.getSession().then(({ session }) => {
+      console.log(session);
       setSession(session);
     });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      console.log(_event)
-      setSession(session);
+    supabase.auth.onAuthStateChange((_event, newSession) => {
+      console.log(newSession);
+      setSession(newSession);
     });
-    console.log(session)
   }, []);
 
-  useEffect(() => { 
-    console.log(session)
+  useEffect(() => {
+    console.log(session);
   }, [session]);
 
   return (
     <div>
       {!session ? (
-        <div
-        style={{
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+            <Auth
+              supabaseClient={supabase}
+              appearance={{ theme: ThemeSupa }}
+              providers={["google", "facebook", "github"]}
+            />
+      ) : (
         <div>
-          <Auth
-            supabaseClient={supabase}
-            appearance={{ theme: ThemeSupa }}
-            providers={["google", "facebook", "github"]}
-          />
-        </div>
-
-      </div>
-    ) : (
-        // <Account key={session.user.id} session={session} />
-        <div>
-          <NewSession key={session.user.id} session={session} />       
+          <NewSession key={session.user.id} session={session} />
           <button onClick={() => supabase.auth.signOut()}>Sign out</button>
         </div>
       )}
