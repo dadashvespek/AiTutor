@@ -14,8 +14,7 @@ import ThemeDropdown from "./ThemeDropdown";
 import ChatContext from "../utils/chatContext";
 import { generateCodeMessage } from "../utils/chatUtils";
 
-const javascriptDefault = `
-console.log("hello world");
+const javascriptDefault = `console.log("hello world");
 `;
 
 const CodeSandbox = ({ language, chatSession }) => {
@@ -119,29 +118,28 @@ const CodeSandbox = ({ language, chatSession }) => {
         setProcessing(false);
         setOutputDetails(response.data);
         showSuccessToast(`Compiled Successfully!`);
-    
-        if (chatType == "chat") {
 
-        //send message to chat
-        setMessages([
-          ...messages,
-          generateCodeMessage(
-            `here is the user's code ${code} and here is the output from executing their code ${atob(
-              response.data.stdout
-            )}`
-          ),
-        ]);
-        console.log("messages", messages);}
+        if (chatType == "chat") {
+          //send message to chat
+          setMessages([
+            ...messages,
+            generateCodeMessage(
+              `here is the user's code ${code} and here is the output from executing their code ${atob(
+                response.data.stdout
+              )}`
+            ),
+          ]);
+          console.log("messages", messages);
+        }
         if (chatType == "voice") {
           const wowresponse = await fetch("http://localhost:5000/audio", {
-  method: "POST",
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    code: code,
-    output: atob(response.data.stdout),
-  })
-});
-
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              code: code,
+              output: atob(response.data.stdout),
+            }),
+          });
         }
         return;
       }
@@ -212,7 +210,7 @@ const CodeSandbox = ({ language, chatSession }) => {
       </div> */}
       <div className="flex flex-row space-x-4 items-start px-4 py-4">
         <div className="flex flex-col w-full h-full justify-start items-end">
-        {/* <h1 className="text-2xl font-bold text-white">
+          {/* <h1 className="text-2xl font-bold text-white">
           Code Editor ({language.value.toUpperCase()})
         </h1> */}
           <CodeEditorWindow
