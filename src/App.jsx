@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 import NewSession from "./components/NewSession";
 import Auth from "./Auth"
-import NavBar from "./components/Navbar.jsx";
+import NavBar from "./components/NavBar";
 
 function App() {
   const [session, setSession] = useState(null);
