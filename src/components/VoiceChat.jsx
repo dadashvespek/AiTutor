@@ -128,11 +128,9 @@ export default function VoiceRecorder({chatSession, session}) {
   const originalAudioEls = useRef([]);
   const serverAudioEls = useRef([]);
   
-  return (
+ return (
     <Box className="voice-recorder" display="flex" flexDirection="column" height="100vh">
       <Box flexGrow={1} className="accordion-window">
-        {isServerResponding && <LoadingSpinner />}
-        
         {originalAudioURLs.map((url, index) => (
           <Box 
             key={index} 
@@ -153,6 +151,8 @@ export default function VoiceRecorder({chatSession, session}) {
         ))}
       </Box>
 
+      {isServerResponding && <LoadingSpinner />}
+
       <Box className="recording-control">
         <RecordingButton recording={recording} handleStopRecording={handleStopRecording} handleStartRecording={handleStartRecording} isServerResponding={isServerResponding} />
         <Typography variant="subtitle1" paddingLeft="1rem">
@@ -161,4 +161,5 @@ export default function VoiceRecorder({chatSession, session}) {
       </Box>
     </Box>
 );
+;
 }
