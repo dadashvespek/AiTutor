@@ -131,12 +131,12 @@ const NewSession = ({ session }) => {
               {sessionType === "chat" ? (
                 <div className="chat interview screen">
                   <Chat session={session} chatSession={chatSession} />
-                  <CodeSandbox language={language} />
+                  <CodeSandbox chatSession={chatSession} language={language} />
                 </div>
               ) : (
                 <div className="chat interview screen">
                   <VoiceChat session={session} chatSession={chatSession} />
-                  <CodeSandbox language={language} />
+                  <CodeSandbox chatSession={chatSession} language={language} />
                 </div>
               )}
             </div>
