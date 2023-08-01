@@ -3,7 +3,7 @@ import Chat from "./Chat";
 import CodeSandbox from "./CodeSandbox";
 import VoiceChat from "./VoiceChat";
 import { languageOptions } from "../constants/languageOptions";
-import ChatContext from "../utils/chatContext";
+import ChatContext from "../utils/ChatContext";
 import styled, { keyframes } from "styled-components";
 import { useSpring, animated } from "react-spring";
 

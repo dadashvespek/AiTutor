@@ -1,7 +1,7 @@
 // Chat.js
 
 import React, { useState, useEffect, useRef, useContext } from "react";
-import ChatContext from "../utils/chatContext";
+import ChatContext from "../utils/ChatContext";
 import Message from "./Message";
 import {
   generateCodeMessage,
