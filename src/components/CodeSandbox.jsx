@@ -132,7 +132,7 @@ const CodeSandbox = ({ language, chatSession }) => {
           console.log("messages", messages);
         }
         if (chatType == "voice") {
-          const wowresponse = await fetch("http://localhost:5000/audio", {
+          const wowresponse = await fetch(`${import.meta.env.VITE_SERVER_URL}audio`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

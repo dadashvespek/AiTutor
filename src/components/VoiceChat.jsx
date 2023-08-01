@@ -53,7 +53,7 @@ export default function VoiceRecorder({chatSession, session}) {
     formData.append('language', chatSession.language.value);
     formData.append('userName', userName);
 
-    const response = await fetch("http://localhost:5000/audio", {
+    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}audio`, {
       method: "POST",
       body: formData
     });
@@ -85,7 +85,7 @@ export default function VoiceRecorder({chatSession, session}) {
       
     
       console.log(formData);
-      const response = await fetch("http://localhost:5000/audio", {
+      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}audio`, {
         method: "POST",
         body: formData
       });
