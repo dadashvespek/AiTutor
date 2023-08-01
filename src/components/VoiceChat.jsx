@@ -3,7 +3,7 @@ import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, 
 import { Mic, Stop, ExpandMore } from '@mui/icons-material';
 import './VoiceRecorder.css';
 
-export default function VoiceRecorder(ChatSession) {
+export default function VoiceRecorder({chatSession, session}) {
   const [recording, setRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [originalAudioURLs, setOriginalAudioURLs] = useState([]);
@@ -11,14 +11,16 @@ export default function VoiceRecorder(ChatSession) {
   const [isServerResponding, setIsServerResponding] = useState(false);
   const audioEls = useRef([]);
   const lastAccordionRef = useRef(null);
+  const userName = session.user.identities[0].identity_data.name;
   const sendEmptyAudioFileToServer = async () => {
     const formData = new FormData();
     const emptyBlob = new Blob([''], { type: 'audio/webm' });
     formData.append('audio', emptyBlob);
-    formData.append('type', ChatSession.chatSession.type);
-    formData.append('difficulty', ChatSession.chatSession.difficulty);
-    formData.append('language', ChatSession.chatSession.language.value);
-  
+    formData.append('type', chatSession.type);
+    formData.append('difficulty', chatSession.difficulty);
+    formData.append('language', chatSession.language.value);
+    formData.append('userName', userName);
+
     const response = await fetch("http://localhost:5000/audio", {
       method: "POST",
       body: formData
@@ -44,9 +46,11 @@ export default function VoiceRecorder(ChatSession) {
       setOriginalAudioURLs(prevURLs => [...prevURLs, url]);
       const formData = new FormData();
       formData.append('audio', e.data);
-      formData.append('type', ChatSession.chatSession.type);
-      formData.append('difficulty', ChatSession.chatSession.difficulty);
-      formData.append('language', ChatSession.chatSession.language.value);
+      formData.append('type', chatSession.type);
+      formData.append('difficulty', chatSession.difficulty);
+      formData.append('language', chatSession.language.value);
+      formData.append('userName', userName);
+      
     
       console.log(formData);
       const response = await fetch("http://localhost:5000/audio", {
