@@ -2,7 +2,30 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, Box } from '@mui/material';
 import { Mic, Stop, ExpandMore } from '@mui/icons-material';
 import './VoiceRecorder.css';
+const AccordionElement = ({ url, label, audioEls, id }) => {
+  return (
+    <Accordion className={label === 'Original Recording' ? "accordion-root original" : "accordion-root server"}>
+      <AccordionSummary 
+        className="accordion-summary" 
+        expandIcon={<ExpandMore />} 
+        sx={{ minHeight: '15px', maxHeight: '30px'}}
+      >
+        <Typography className="typography" sx={{ fontSize: '0.8rem' }}>{`${label}`}</Typography>
+      </AccordionSummary>
+      <AccordionDetails className="accordion-details">
+        <audio ref={el => audioEls.current[id] = el} src={url} controls />
+      </AccordionDetails>
+    </Accordion>
+  ) 
+};
 
+const RecordingButton = ({ recording, handleStopRecording, handleStartRecording, isServerResponding }) => {
+  return (
+    <IconButton className={recording ? "mic-icon-recording" : "mic-icon"} color="primary" aria-label="record" disabled={isServerResponding} onClick={recording ? handleStopRecording : handleStartRecording}>
+      {recording ? <Stop fontSize="large" /> : <Mic fontSize="large" />}
+    </IconButton>
+  )
+};
 export default function VoiceRecorder({chatSession, session}) {
   const [recording, setRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
@@ -93,47 +116,34 @@ export default function VoiceRecorder({chatSession, session}) {
       lastAccordionRef.current.scrollIntoView({ behavior: 'smooth' });  
     }
   }, [originalAudioURLs, serverAudioURLs]);
+  const originalAudioEls = useRef([]);
+  const serverAudioEls = useRef([]);
+  
   return (
     <Box className="voice-recorder" display="flex" flexDirection="column" height="100vh">
       <Box flexGrow={1} className="accordion-window">
         {originalAudioURLs.map((url, index) => (
           <Box 
             key={index} 
-            className="accordion-container"
+            className="accordion-container original"
             ref={index === originalAudioURLs.length - 1 ? lastAccordionRef : null}  
           >
-            <Accordion className="MuiAccordion-root">
-              <AccordionSummary className="MuiAccordionSummary-root" expandIcon={<ExpandMore />}>
-                <Typography>{`Original Recording ${index + 1}`}</Typography>
-              </AccordionSummary>
-              <AccordionDetails className="MuiAccordionDetails-root">
-                <audio ref={el => audioEls.current[index] = el} src={url} controls />
-              </AccordionDetails>
-            </Accordion>
+            <AccordionElement url={url} label='Original Recording' audioEls={audioEls} id={`original-${index}`} />
           </Box>
         ))}
 
         {serverAudioURLs.map((url, index) => (
           <Box 
             key={index} 
-            className="accordion-container"
+            className="accordion-container server"
           >
-            <Accordion className="MuiAccordion-root">
-              <AccordionSummary className="MuiAccordionSummary-root" expandIcon={<ExpandMore />}>
-                <Typography>{`Server Response ${index + 1}`}</Typography>
-              </AccordionSummary>
-              <AccordionDetails className="MuiAccordionDetails-root">
-                <audio ref={el => audioEls.current[originalAudioURLs.length + index] = el} src={url} controls />
-              </AccordionDetails>
-            </Accordion>
+            <AccordionElement url={url} label='Server Response' audioEls={audioEls} id={`server-${index}`} />
           </Box>
         ))}
       </Box>
 
       <Box className="recording-control">
-        <IconButton className={recording ? "mic-icon-recording" : "mic-icon"} color="primary" aria-label="record" disabled={isServerResponding} onClick={recording ? handleStopRecording : handleStartRecording}>
-          {recording ? <Stop fontSize="large" /> : <Mic fontSize="large" />}
-        </IconButton>
+        <RecordingButton recording={recording} handleStopRecording={handleStopRecording} handleStartRecording={handleStartRecording} isServerResponding={isServerResponding} />
         <Typography variant="subtitle1" paddingLeft="1rem">
           {recording ? "Recording..." : "Click Mic to start recording"}
         </Typography>
