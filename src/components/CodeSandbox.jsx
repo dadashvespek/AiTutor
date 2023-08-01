@@ -18,13 +18,14 @@ const javascriptDefault = `
 console.log("hello world");
 `;
 
-const CodeSandbox = ({ language }) => {
+const CodeSandbox = ({ language, chatSession }) => {
   const [code, setCode] = useState(javascriptDefault);
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
   const [theme, setTheme] = useState("cobalt");
   const { messages, setMessages } = useContext(ChatContext);
+  const chatType = chatSession.chatType;
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
@@ -119,6 +120,8 @@ const CodeSandbox = ({ language }) => {
         setOutputDetails(response.data);
         showSuccessToast(`Compiled Successfully!`);
         console.log("response.data", response.data);
+        if (chatType == "chat") {
+
         //send message to chat
         setMessages([
           ...messages,
@@ -128,7 +131,17 @@ const CodeSandbox = ({ language }) => {
             )}`
           ),
         ]);
-        console.log("messages", messages);
+        console.log("messages", messages);}
+        if (chatType == "voice") {
+          const response = await fetch("http://localhost:5000/audio", {
+            method: "POST",
+            body: {
+              code: code,
+              output: atob(response.data.stdout),
+            }
+          });
+          console.log("response", response);
+        }
         return;
       }
     } catch (err) {
