@@ -130,7 +130,7 @@ function Chat({ session, chatSession }) {
   }, [chatSession, sendMessage, messages]);
 
   return (
-    <div className="w-1/2 flex flex-col justify-between">
+    <div className="w-1/2 flex flex-col h-screen justify-between">
       <div id="chat_container" className="overflow-auto" ref={chatContainer}>
         {messages.map((message, index) => (
           <Message key={index} messageData={message} />
