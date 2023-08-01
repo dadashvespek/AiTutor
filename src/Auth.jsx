@@ -2,8 +2,8 @@ import { useState } from "react";
 import { supabase } from "./supabaseClient";
 import styled, { keyframes } from "styled-components";
 import { useSpring, animated } from "react-spring";
-import { Auth as Auth1 } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+import GoogleIcon from "@mui/icons-material/Google";
+
 
 const pulse = keyframes`
   0% { transform: scale(1); }
@@ -77,6 +77,7 @@ const Button = styled.button`
   cursor: pointer;
   width: 100%;
   font-size: 1.2rem;
+  margin-bottom: 1rem;
   transition: background-color 0.3s;
   &:hover {
     background-color: #2563eb;
@@ -85,6 +86,24 @@ const Button = styled.button`
   &:disabled {
     background-color: #d1d5db;
   }
+`;
+
+const GoogleButton = styled(Button)`
+  background-color: #4285F4;
+  color: #fff;
+  &:hover {
+    background-color: #357ae8;
+    animation: 2s ${pulse} infinite;
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+`;
+
+const IconWrapper = styled.span`
+  display: inline-flex;
+  margin-right: 4px;
 `;
 
 export default function Auth() {
@@ -111,7 +130,7 @@ export default function Auth() {
     }
     setLoading(false);
   };
-
+//TODO fix no user name when signing in with google
   return (
     <Wrapper>
       <animated.div style={animation}>
@@ -131,15 +150,16 @@ export default function Auth() {
             <Button disabled={loading}>
               {loading ? <span>Loading...</span> : <span>Send Magic Link</span>}
             </Button>
-            <Button
-              onClick={() =>
-                supabase.auth.signInWithOAuth({
-                  provider: "google",
-                })
-              }
-            >
-              Sign in with Google
-            </Button>
+            <GoogleButton
+  type="button"
+  onClick={() => supabase.auth.signInWithOAuth({ provider: "google" })}
+>
+  <IconWrapper>
+    <GoogleIcon />
+  </IconWrapper>
+  Sign in with Google
+</GoogleButton>
+
           </div>
         </Form>
       </animated.div>
