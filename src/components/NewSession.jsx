@@ -4,6 +4,91 @@ import CodeSandbox from "./CodeSandbox";
 import VoiceChat from "./VoiceChat";
 import { languageOptions } from "../constants/languageOptions";
 import ChatContext from "../utils/chatContext";
+import styled, { keyframes } from "styled-components";
+import { useSpring, animated } from "react-spring";
+
+
+
+const pulse = keyframes`
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1f2937; /* changed to a dark navy blue */
+  color: #f9fafb; /* changed to the previous background color for contrast */
+`;
+
+const Form = styled.form`
+  background-color: #f9fafb;
+  padding: 2.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 450px;
+  display: grid;
+  grid-gap: 2rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+`;
+
+const Title = styled.h1`
+  text-align: center;
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 2rem;
+  letter-spacing: -1px;
+  margin-bottom: 1rem;
+`;
+
+const Description = styled.p`
+  text-align: center;
+  color: #4b5563;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+`;
+
+const Input = styled.select`
+  border: none;
+  border-bottom: 1px solid #d1d5db;
+  padding: 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-bottom-color 0.3s ease-in-out;
+  &:focus {
+    border-bottom-color: #3b82f6;
+    outline-color: #3b82f6;
+  }
+  background-color: #f9fafb;
+  color: #111827;
+`;
+
+const Button = styled.button`
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 15px;
+  color: #f9fafb;
+  background-color: #3b82f6;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: #2563eb;
+    animation: 2s ${pulse} infinite;
+  }
+  &:disabled {
+    background-color: #d1d5db;
+  }
+`;
+
 
 const NewSession = ({ session }) => {
   const [messages, setMessages] = useState([]);
@@ -29,87 +114,70 @@ const NewSession = ({ session }) => {
     // }
   };
 
+  const animation = useSpring({
+    from: { opacity: 0, transform: "translate3d(0,40px,0)" },
+    to: { opacity: 1, transform: "translate3d(0,0px,0)" },
+    delay: 300,
+    config: { mass: 1, tension: 280, friction: 60 },
+  });
+
+
   return (
     <ChatContext.Provider value={{ messages, setMessages }}>
-      <div>
-        {chatSession ? (
-          <div className="flex">
-            {sessionType === "chat" ? (
-              <div className="chat interview screen">
-                <Chat session={session} chatSession={chatSession} />
-                <CodeSandbox language={language} />
-              </div>
-            ) : (
-              <div className="chat interview screen">
-              <VoiceChat session={session} chatSession={chatSession} />
-              <CodeSandbox language={language} />
+      <Wrapper>
+        <animated.div style={animation}>
+          {chatSession ? (
+            <div className="flex">
+              {sessionType === "chat" ? (
+                <div className="chat interview screen">
+                  <Chat session={session} chatSession={chatSession} />
+                  <CodeSandbox language={language} />
+                </div>
+              ) : (
+                <div className="chat interview screen">
+                  <VoiceChat session={session} chatSession={chatSession} />
+                  <CodeSandbox language={language} />
+                </div>
+              )}
             </div>
-              
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center justify-center">
-            <div className="flex flex-col items-center justify-center min-h-screen w-1/3">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                Welcome {userName}
-              </h1>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          ) : (
+            <Form onSubmit={startSession}>
+              <Title>Welcome {userName}</Title>
+              <Description>
                 What type of session would you like to start?
-              </h2>
-              <form
-                onSubmit={startSession}
-                className="flex flex-col space-y-2 rounded "
-              >
-                <label
-                  htmlFor="sessionType"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Select Session Type
-                </label>
-                <select
+              </Description>
+              <div>
+                <Input
                   id="sessionType"
                   value={sessionType}
                   onChange={(e) => setSessionType(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
                   <option value="">Select Session Type</option>
                   <option value="chat">Chat</option>
                   <option value="voice">Voice</option>
-                </select>
-                <label
-                  htmlFor="difficulty"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Select Difficulty
-                </label>
-                <select
+                </Input>
+              </div>
+              <div>
+                <Input
                   id="difficulty"
                   value={difficulty}
                   onChange={(e) => setDifficulty(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
                   <option value="">Select Difficulty</option>
                   <option value="easy">Easy</option>
                   <option value="medium">Medium</option>
                   <option value="hard">Hard</option>
-                </select>
-                <label
-                  htmlFor="language"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Select Language
-                </label>
-                <select
+                </Input>
+              </div>
+              <div>
+                <Input
                   id="language"
                   value={language.value}
                   onChange={(e) =>
                     setLanguage(
-                      languageOptions.find(
-                        (opt) => opt.value === e.target.value
-                      )
+                      languageOptions.find((opt) => opt.value === e.target.value)
                     )
                   }
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 >
                   <option value="">Select Language</option>
                   {languageOptions.map((lang) => (
@@ -117,18 +185,13 @@ const NewSession = ({ session }) => {
                       {lang.name}
                     </option>
                   ))}
-                </select>
-                <button
-                  type="submit"
-                  className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Start Session
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
-      </div>
+                </Input>
+              </div>
+              <Button type="submit">Start Session</Button>
+            </Form>
+          )}
+        </animated.div>
+      </Wrapper>
     </ChatContext.Provider>
   );
 };
