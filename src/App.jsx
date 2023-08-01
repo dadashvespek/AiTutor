@@ -1,10 +1,9 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
-import Account from "./Account";
 import NewSession from "./components/NewSession";
 import Auth from "./Auth"
-import NavBar from "./components/Navbar";
+import NavBar from "./components/Navbar.jsx";
 
 function App() {
   const [session, setSession] = useState(null);
