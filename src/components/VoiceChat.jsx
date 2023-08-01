@@ -13,11 +13,12 @@ const AccordionElement = ({ url, label, audioEls, id }) => {
         <Typography className="typography" sx={{ fontSize: '0.8rem' }}>{`${label}`}</Typography>
       </AccordionSummary>
       <AccordionDetails className="accordion-details">
-        <audio ref={el => audioEls.current[id] = el} src={url} controls />
+        <audio ref={el => audioEls.current[id] = el} src={url} controls autoPlay={label === 'Interviewer'} />
       </AccordionDetails>
     </Accordion>
   ) 
 };
+
 
 const RecordingButton = ({ recording, handleStopRecording, handleStartRecording, isServerResponding }) => {
   return (
@@ -137,7 +138,7 @@ export default function VoiceRecorder({chatSession, session}) {
             key={index} 
             className="accordion-container server"
           >
-            <AccordionElement url={url} label='Server Response' audioEls={audioEls} id={`server-${index}`} />
+            <AccordionElement url={url} label='Interviewer' audioEls={audioEls} id={`server-${index}`} />
           </Box>
         ))}
       </Box>
