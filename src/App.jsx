@@ -4,6 +4,7 @@ import { supabase } from "./supabaseClient";
 import Account from "./Account";
 import NewSession from "./components/NewSession";
 import Auth from "./Auth"
+import NavBar from "./components/Navbar";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -31,6 +32,7 @@ function App() {
             />
       ) : (
         <div>
+             <NavBar session={session}/>
           <NewSession key={session.user.id} session={session} />
           <button onClick={() => supabase.auth.signOut()}>Sign out</button>
         </div>
