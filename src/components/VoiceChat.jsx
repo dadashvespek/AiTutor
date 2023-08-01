@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, Box } from '@mui/material';
 import { Mic, Stop, ExpandMore } from '@mui/icons-material';
+import { CircularProgress } from '@mui/material';
+import LoadingSpinner from './LoadingSpinner';
 import './VoiceRecorder.css';
-const AccordionElement = ({ url, label, audioEls, id }) => {
+const AccordionElement = ({ url, label, audioEls, id, isServerResponding }) => {
   return (
     <Accordion className={label === 'Original Recording' ? "accordion-root original" : "accordion-root server"}>
       <AccordionSummary 
@@ -13,7 +15,11 @@ const AccordionElement = ({ url, label, audioEls, id }) => {
         <Typography className="typography" sx={{ fontSize: '0.8rem' }}>{`${label}`}</Typography>
       </AccordionSummary>
       <AccordionDetails className="accordion-details">
-        <audio ref={el => audioEls.current[id] = el} src={url} controls autoPlay={label === 'Interviewer'} />
+        {
+          isServerResponding ?
+            <CircularProgress /> :
+            <audio ref={el => audioEls.current[id] = el} src={url} controls autoPlay={label === 'Interviewer'} />
+        }
       </AccordionDetails>
     </Accordion>
   ) 
@@ -34,6 +40,8 @@ export default function VoiceRecorder({chatSession, session}) {
   const [serverAudioURLs, setServerAudioURLs] = useState([]);
   const [isServerResponding, setIsServerResponding] = useState(false);
   const audioEls = useRef([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const lastAccordionRef = useRef(null);
   const userName = session.user.identities[0].identity_data.name;
   const sendEmptyAudioFileToServer = async () => {
@@ -96,7 +104,7 @@ export default function VoiceRecorder({chatSession, session}) {
     if (mediaRecorder) {
       mediaRecorder.stop();
       setRecording(false);
-      //setIsServerResponding(true);
+      setIsServerResponding(true);
     }
   };
 
@@ -123,6 +131,8 @@ export default function VoiceRecorder({chatSession, session}) {
   return (
     <Box className="voice-recorder" display="flex" flexDirection="column" height="100vh">
       <Box flexGrow={1} className="accordion-window">
+        {isServerResponding && <LoadingSpinner />}
+        
         {originalAudioURLs.map((url, index) => (
           <Box 
             key={index} 
@@ -150,5 +160,5 @@ export default function VoiceRecorder({chatSession, session}) {
         </Typography>
       </Box>
     </Box>
-  );
+);
 }
