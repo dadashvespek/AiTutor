@@ -7,6 +7,9 @@ const NavBar = ({session}) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const userName = session.user.identities[0].identity_data.name;
     const userEmail = session.user.email;
+    //get the user's profile picture from supabase session
+    const userPicture = session.user.user_metadata.avatar_url;
+    console.log(userPicture);
 
       
     useEffect(() => {
@@ -36,7 +39,7 @@ const NavBar = ({session}) => {
           <div className="relative flex items-center md:order-2">
               <button type="button" className="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom" onClick={() => setDropdownOpen(!dropdownOpen)}>
                 <span className="sr-only">Open user menu</span>
-                <img className="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo" />
+                <img className="w-8 h-8 rounded-full" src={userPicture} alt="user photo" />
               </button>
               {dropdownOpen && (
                 <div className="z-50 absolute top-full right-0 mt-4 py-2 w-48 bg-white rounded-md shadow-xl dark:bg-gray-800" id="user-dropdown">
