@@ -4,7 +4,6 @@ import { supabase } from "./supabaseClient";
 import Account from "./Account";
 import NewSession from "./components/NewSession";
 import Auth from "./Auth"
-import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -29,9 +28,6 @@ function App() {
     <div>
       {!session ? (
             <Auth
-              supabaseClient={supabase}
-              appearance={{ theme: ThemeSupa }}
-              providers={["google", "facebook", "github"]}
             />
       ) : (
         <div>
