@@ -96,27 +96,32 @@ export default function VoiceRecorder(ChatSession) {
           <Box 
             key={index} 
             className="accordion-container"
-            ref={index === originalAudioURLs.length - 1 ? lastAccordionRef : null}  // New: assign the ref to the last accordion
+            ref={index === originalAudioURLs.length - 1 ? lastAccordionRef : null}  
           >
             <Accordion className="MuiAccordion-root">
               <AccordionSummary className="MuiAccordionSummary-root" expandIcon={<ExpandMore />}>
                 <Typography>{`Original Recording ${index + 1}`}</Typography>
               </AccordionSummary>
               <AccordionDetails className="MuiAccordionDetails-root">
-                <audio ref={el => audioEls.current[index * 2] = el} src={url} controls />
+                <audio ref={el => audioEls.current[index] = el} src={url} controls />
               </AccordionDetails>
             </Accordion>
-            
-            {serverAudioURLs[index] && (
-              <Accordion className="MuiAccordion-root">
-                <AccordionSummary className="MuiAccordionSummary-root" expandIcon={<ExpandMore />}>
-                  <Typography>{`Server Response ${index + 1}`}</Typography>
-                </AccordionSummary>
-                <AccordionDetails className="MuiAccordionDetails-root">
-                  <audio ref={el => audioEls.current[index * 2 + 1] = el} src={serverAudioURLs[index]} controls />
-                </AccordionDetails>
-              </Accordion>
-            )}
+          </Box>
+        ))}
+
+        {serverAudioURLs.map((url, index) => (
+          <Box 
+            key={index} 
+            className="accordion-container"
+          >
+            <Accordion className="MuiAccordion-root">
+              <AccordionSummary className="MuiAccordionSummary-root" expandIcon={<ExpandMore />}>
+                <Typography>{`Server Response ${index + 1}`}</Typography>
+              </AccordionSummary>
+              <AccordionDetails className="MuiAccordionDetails-root">
+                <audio ref={el => audioEls.current[originalAudioURLs.length + index] = el} src={url} controls />
+              </AccordionDetails>
+            </Accordion>
           </Box>
         ))}
       </Box>
