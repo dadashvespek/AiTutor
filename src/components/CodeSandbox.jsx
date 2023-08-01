@@ -195,9 +195,9 @@ const CodeSandbox = ({ language }) => {
         <h1 className="text-2xl font-bold text-white">
           {language.value.toUpperCase()}
         </h1>
-        <div className="px-4 py-2">
+        {/* <div className="px-4 py-2">
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
-        </div>
+        </div> */}
       </div>
       <div className="flex flex-row space-x-4 items-start px-4 py-4">
         <div className="flex flex-col w-full h-full justify-start items-end">
@@ -212,10 +212,10 @@ const CodeSandbox = ({ language }) => {
         <div className="right-container flex flex-shrink-0 w-[30%] flex-col">
           <OutputWindow outputDetails={outputDetails} />
           <div className="flex flex-col items-end">
-            <CustomInput
+            {/* <CustomInput
               customInput={customInput}
               setCustomInput={setCustomInput}
-            />
+            /> */}
             <button
               onClick={handleCompile}
               disabled={!code}

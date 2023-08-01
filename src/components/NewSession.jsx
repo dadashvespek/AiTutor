@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   align-items: center;
   height: 100vh;
   background-color: #1f2937; /* changed to a dark navy blue */
-  color: #f9fafb; /* changed to the previous background color for contrast */
+  // color: #f9fafb; /* changed to the previous background color for contrast */
 `;
 
 const Form = styled.form`
@@ -93,7 +93,7 @@ const Button = styled.button`
 const NewSession = ({ session }) => {
   const [messages, setMessages] = useState([]);
   const [sessionType, setSessionType] = useState("chat");
-  const [difficulty, setDifficulty] = useState("");
+  const [difficulty, setDifficulty] = useState("easy");
   const [language, setLanguage] = useState({
     id: 63,
     name: "JavaScript (Node.js 12.14.0)",
