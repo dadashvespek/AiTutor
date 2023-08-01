@@ -34,7 +34,7 @@ function App() {
         <div>
              <NavBar session={session}/>
           <NewSession key={session.user.id} session={session} />
-          <button onClick={() => supabase.auth.signOut()}>Sign out</button>
+
         </div>
       )}
     </div>
