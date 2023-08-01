@@ -11,7 +11,7 @@ import OutputWindow from "./OutputWindow";
 import CustomInput from "./CustomInput";
 import OutputDetails from "./OutputDetails";
 import ThemeDropdown from "./ThemeDropdown";
-import ChatContext from "../utils/chatContext";
+import ChatContext from "../utils/ChatContext";
 import { generateCodeMessage } from "../utils/chatUtils";
 
 const javascriptDefault = `console.log("hello world");
