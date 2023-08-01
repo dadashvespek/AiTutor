@@ -39,7 +39,7 @@ const OutputWindow = ({ outputDetails }) => {
         Output
       </h1> */}
       <div className="w-full h-56 bg-[#1e293b] rounded-md text-white font-normal text-sm overflow-y-auto">
-        {outputDetails ? <>{getOutput()}</> : <pre className="px-2 py-1 font-normal text-xs text-red-500">
+        {outputDetails ? <>{getOutput()}</> : <pre className="px-2 py-1 font-normal text-xs text-green-500">
           {`output displayed here`}
         </pre>}
       </div>
