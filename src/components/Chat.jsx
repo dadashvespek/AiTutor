@@ -42,6 +42,7 @@ function Chat({ session, chatSession }) {
     });
 
     try {
+      console.log("server url", import.meta.env.VITE_SERVER_URL)
       const response = await fetch(import.meta.env.VITE_SERVER_URL, {
         method: "POST",
         headers: {
