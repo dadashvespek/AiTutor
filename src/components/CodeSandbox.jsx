@@ -25,7 +25,7 @@ const CodeSandbox = ({ language, chatSession }) => {
   const [processing, setProcessing] = useState(null);
   const [theme, setTheme] = useState("cobalt");
   const { messages, setMessages } = useContext(ChatContext);
-  const chatType = chatSession.chatType;
+  const chatType = chatSession.type;
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
@@ -119,7 +119,7 @@ const CodeSandbox = ({ language, chatSession }) => {
         setProcessing(false);
         setOutputDetails(response.data);
         showSuccessToast(`Compiled Successfully!`);
-        console.log("response.data", response.data);
+    
         if (chatType == "chat") {
 
         //send message to chat
@@ -133,14 +133,13 @@ const CodeSandbox = ({ language, chatSession }) => {
         ]);
         console.log("messages", messages);}
         if (chatType == "voice") {
-          const response = await fetch("http://localhost:5000/audio", {
+          const wowresponse = await fetch("http://localhost:5000/audio", {
             method: "POST",
             body: {
               code: code,
               output: atob(response.data.stdout),
             }
           });
-          console.log("response", response);
         }
         return;
       }
