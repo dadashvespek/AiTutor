@@ -130,6 +130,37 @@ function Chat({ session, chatSession }) {
     sendWelcomeMessage(chatSession, sendMessage, messages);
   }, [chatSession, sendMessage, messages]);
 
+  const resetChat = async () => {
+    try {
+      // Send the reset flag to the backend
+      const response = await fetch(import.meta.env.VITE_SERVER_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: "i want you to act as a software engineer interview coach...",
+          reset: true // signal to the backend to reset
+        }),
+      });
+  
+      if (response.ok) {
+        setMessages([]); // Clear frontend messages
+        const data = await response.json();
+        // Process the response from the backend and add the bot's response to the messages
+      } else {
+        const err = await response.text();
+        console.error(err);
+        alert("Failed to reset chat!");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Failed to reset chat!");
+    }
+  };
+  
+  
+
   return (
     <div className="w-1/2 flex flex-col h-screen justify-between">
       <div id="chat_container" className="overflow-auto" ref={chatContainer}>
@@ -147,6 +178,8 @@ function Chat({ session, chatSession }) {
           onChange={(e) => setNewMessage(e.target.value)}
         />
         <button type="submit">Send</button>
+        <button onClick={(e) => { e.preventDefault(); resetChat(); }}>Reset Chat</button>
+
       </form>
     </div>
   );
