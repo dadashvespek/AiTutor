@@ -131,6 +131,7 @@ function Chat({ session, chatSession }) {
   }, [chatSession, sendMessage, messages]);
 
   const resetChat = async () => {
+    setMessages([]); // Clear frontend messages
     try {
       // Send the reset flag to the backend
       const response = await fetch(import.meta.env.VITE_SERVER_URL, {
@@ -139,13 +140,13 @@ function Chat({ session, chatSession }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          prompt: "i want you to act as a software engineer interview coach...",
+          prompt:`i want you to act as a software engineer interview coach. you will ask me a ${chatSession.difficulty} ${chatSession.language.name} problem, i will provide my code and the ouput in the next prompt, and then we will discuss it after that. my name is ${userName}. lets start!`
+          ,
           reset: true // signal to the backend to reset
         }),
       });
   
       if (response.ok) {
-        setMessages([]); // Clear frontend messages
         const data = await response.json();
         // Process the response from the backend and add the bot's response to the messages
       } else {
@@ -158,6 +159,10 @@ function Chat({ session, chatSession }) {
       alert("Failed to reset chat!");
     }
   };
+  
+  
+  
+  
   
   
 
