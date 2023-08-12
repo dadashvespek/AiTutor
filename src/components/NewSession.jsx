@@ -18,7 +18,9 @@ const pulse = keyframes`
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  // align-items: center;
+  //add top padding
+  padding-top: 1vh;
   height: 100vh;
   background-color: #1f2937; /* changed to a dark navy blue */
   // color: #f9fafb; /* changed to the previous background color for contrast */

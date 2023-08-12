@@ -234,11 +234,11 @@ const CodeSandbox = ({ language, chatSession }) => {
       </button>
     </div>
 
-    {outputDetails && 
+    {/* {outputDetails && 
       <div className="flex flex-row space-x-4 items-start px-4 py-4">
         <OutputDetails outputDetails={outputDetails} />
       </div>
-    }
+    } */}
 
     <div className="flex flex-row space-x-4 items-start px-4 py-4">
       <OutputWindow outputDetails={outputDetails} />
