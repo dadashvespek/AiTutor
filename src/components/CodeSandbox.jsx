@@ -203,46 +203,47 @@ const CodeSandbox = ({ language, chatSession }) => {
         pauseOnHover
       />
 
-      <div className="flex flex-row items-center justify-between px-5">
+      {/* <div className="flex flex-row items-center justify-between px-5">
         <div className="px-4 py-2">
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
         </div>
-      </div>
-      <div className="flex flex-row space-x-4 items-start px-4 py-4">
-        <div className="flex flex-col w-full h-full justify-start items-end">
-          {/* <h1 className="text-2xl font-bold text-white">
-          Code Editor ({language.value.toUpperCase()})
-        </h1> */}
-          <CodeEditorWindow
-            code={code}
-            onChange={onChange}
-            language={language?.value}
-            theme={theme.value}
-          />
-        </div>
+      </div> */}
 
-        <div className="right-container flex flex-shrink-0 w-[30%] flex-col">
-          <OutputWindow outputDetails={outputDetails} />
-          <div className="flex flex-col items-end">
-            {/* <CustomInput
-              customInput={customInput}
-              setCustomInput={setCustomInput}
-            /> */}
-            <button
-              onClick={handleCompile}
-              disabled={!code}
-              className={classnames(
-                "mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0",
-                !code ? "opacity-50" : ""
-              )}
-            >
-              {processing ? "Processing..." : "Compile and Execute"}
-            </button>
-          </div>
-          {outputDetails && <OutputDetails outputDetails={outputDetails} />}
-        </div>
+<div className="flex flex-row space-x-4 items-start px-4 py-4">
+      <div className="flex flex-col w-full max-h-96 overflow-y-auto justify-start items-end">
+        <CodeEditorWindow
+          code={code}
+          onChange={onChange}
+          language={language?.value}
+          theme={theme.value}
+        />
       </div>
     </div>
-  );
+
+
+    <div className="flex flex-row space-x-4 items-start px-4 py-4">
+      <button
+        onClick={handleCompile}
+        disabled={!code}
+        className={classnames(
+          "border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0",
+          !code ? "opacity-50" : ""
+        )}
+      >
+        {processing ? "Processing..." : "Compile and Execute"}
+      </button>
+    </div>
+
+    {outputDetails && 
+      <div className="flex flex-row space-x-4 items-start px-4 py-4">
+        <OutputDetails outputDetails={outputDetails} />
+      </div>
+    }
+
+    <div className="flex flex-row space-x-4 items-start px-4 py-4">
+      <OutputWindow outputDetails={outputDetails} />
+    </div>
+  </div>
+);
 };
 export default CodeSandbox;
