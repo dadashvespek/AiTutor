@@ -118,7 +118,7 @@ function Chat({ session, chatSession }) {
     return (chatSession, sendMessage, messages) => {
       if (chatSession && messages.length === 0 && !hasSentWelcomeMessage) {
         const welcomeMessage = generateCodeMessage(
-          `i want you to act as a software engineer interview coach. you will ask me a ${chatSession.difficulty} ${chatSession.language.name} problem, i will provide my code and the ouput in the next prompt, and then we will discuss it after that. my name is ${userName}. lets start!`
+          `i want you to act as a programming tutor. you will ask me a ${chatSession.difficulty} ${chatSession.language.name} problem, i will provide my code and the ouput in the next prompt, and then we will discuss it after that. my name is ${userName}. lets start!`
         );
         sendMessage(welcomeMessage.message);
         hasSentWelcomeMessage = true;
@@ -167,7 +167,7 @@ function Chat({ session, chatSession }) {
   
 
   return (
-    <div className="w-1/2 flex flex-col h-[80vh] justify-between">
+    <div className="w-1/2 flex flex-col h-[88vh] justify-between">
       <div id="chat_container" className="overflow-auto" ref={chatContainer}>
         {messages.map((message, index) => (
           <Message key={index} messageData={message} />

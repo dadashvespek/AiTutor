@@ -129,8 +129,8 @@ export default function VoiceRecorder({chatSession, session}) {
   const serverAudioEls = useRef([]);
   
  return (
-    <Box className="voice-recorder" display="flex" flexDirection="column" height="100vh">
-      <Box flexGrow={1} className="accordion-window">
+    <Box className="voice-recorder w-1/2 h-[86vh] py-4 mt-4" display="flex" flexDirection="column">
+      <Box flexGrow={1} className="accordion-window w-[40vw]">
         {originalAudioURLs.map((url, index) => (
           <Box 
             key={index} 
