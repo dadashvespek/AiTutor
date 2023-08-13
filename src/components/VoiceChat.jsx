@@ -43,7 +43,9 @@ export default function VoiceRecorder({chatSession, session}) {
   const [isLoading, setIsLoading] = useState(false);
 
   const lastAccordionRef = useRef(null);
+  const hasCalledAPI = useRef(false);  // <-- Introduced ref here
   const userName = session.user.identities[0].identity_data.name;
+
   const sendEmptyAudioFileToServer = async () => {
     const formData = new FormData();
     const emptyBlob = new Blob([''], { type: 'audio/webm' });
@@ -64,12 +66,15 @@ export default function VoiceRecorder({chatSession, session}) {
   };
 
   useEffect(() => {
-    sendEmptyAudioFileToServer();
+    if (!hasCalledAPI.current) {
+      sendEmptyAudioFileToServer();
+      hasCalledAPI.current = true; 
+    }
   }, []);
+
   const handleStartRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const newMediaRecorder = new MediaRecorder(stream, {mimeType: 'audio/webm'});
-    
     
     newMediaRecorder.start();
 
