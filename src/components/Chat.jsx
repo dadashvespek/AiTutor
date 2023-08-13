@@ -118,7 +118,7 @@ function Chat({ session, chatSession }) {
     return (chatSession, sendMessage, messages) => {
       if (chatSession && messages.length === 0 && !hasSentWelcomeMessage) {
         const welcomeMessage = generateCodeMessage(
-          `i want you to act as a software engineer interview coach. you will ask me a ${chatSession.difficulty} ${chatSession.language.name} problem, i will provide my code and the ouput in the next prompt, and then we will discuss it after that. my name is ${userName}. lets start!`
+          `i want you to act as a programming tutor. you will ask me a ${chatSession.difficulty} ${chatSession.language.name} problem, i will provide my code and the ouput in the next prompt, and then we will discuss it after that. my name is ${userName}. lets start!`
         );
         sendMessage(welcomeMessage.message);
         hasSentWelcomeMessage = true;
@@ -130,8 +130,44 @@ function Chat({ session, chatSession }) {
     sendWelcomeMessage(chatSession, sendMessage, messages);
   }, [chatSession, sendMessage, messages]);
 
+  const resetChat = async () => {
+    setMessages([]); // Clear frontend messages
+    try {
+      // Send the reset flag to the backend
+      const response = await fetch(import.meta.env.VITE_SERVER_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt:`i want you to act as a software engineer interview coach. you will ask me a ${chatSession.difficulty} ${chatSession.language.name} problem, i will provide my code and the ouput in the next prompt, and then we will discuss it after that. my name is ${userName}. lets start!`
+          ,
+          reset: true // signal to the backend to reset
+        }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        // Process the response from the backend and add the bot's response to the messages
+      } else {
+        const err = await response.text();
+        console.error(err);
+        alert("Failed to reset chat!");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Failed to reset chat!");
+    }
+  };
+  
+  
+  
+  
+  
+  
+
   return (
-    <div className="w-1/2 flex flex-col h-[80vh] justify-between">
+    <div className="w-1/2 flex flex-col h-[88vh] justify-between">
       <div id="chat_container" className="overflow-auto" ref={chatContainer}>
         {messages.map((message, index) => (
           <Message key={index} messageData={message} />
@@ -147,6 +183,8 @@ function Chat({ session, chatSession }) {
           onChange={(e) => setNewMessage(e.target.value)}
         />
         <button type="submit">Send</button>
+        <button onClick={(e) => { e.preventDefault(); resetChat(); }}>Reset Chat</button>
+
       </form>
     </div>
   );
