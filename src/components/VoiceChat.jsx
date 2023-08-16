@@ -126,9 +126,16 @@ export default function VoiceRecorder({chatSession, session}) {
         body: formData
       });
 
-      const audioResponse = await response.blob();
+      const responseData = await response.json();
+
+      // Extract the audio, transcribed text, and AI response text
+      const audioResponse = new Blob([new Uint8Array(responseData.audioBuffer.data)], { type: 'audio/mp3' });
       const responseURL = URL.createObjectURL(audioResponse);
       setServerAudioURLs(prevURLs => [...prevURLs, responseURL]);
+      
+      // Display the transcribed text and AI response text somewhere in your UI
+      console.log("Transcribed Audio:", responseData.transcription);
+      console.log("OpenAI Response:", responseData.aiResponse);
     };
 
     setMediaRecorder(newMediaRecorder);
