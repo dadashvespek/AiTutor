@@ -5,7 +5,7 @@ import { CircularProgress } from '@mui/material';
 import LoadingSpinner from './LoadingSpinner';
 import './VoiceRecorder.css';
 import interviewTipsByLanguage from './Interviewtips';
-const AccordionElement = ({ url, label, audioEls, id, isServerResponding }) => {
+const AccordionElement = ({ url, label, audioEls, id, isServerResponding, transcription }) => {
   return (
     <Accordion className={label === 'Original Recording' ? "accordion-root original" : "accordion-root server"}>
       <AccordionSummary 
@@ -19,7 +19,10 @@ const AccordionElement = ({ url, label, audioEls, id, isServerResponding }) => {
         {
           isServerResponding ?
             <CircularProgress /> :
-            <audio ref={el => audioEls.current[id] = el} src={url} controls autoPlay={label === 'Interviewer'} />
+            <>
+              <audio ref={el => audioEls.current[id] = el} src={url} controls autoPlay={label === 'Interviewer'} />
+              <Typography variant="body2" className="transcription-text">{transcription}</Typography>
+            </>
         }
       </AccordionDetails>
     </Accordion>
@@ -68,6 +71,8 @@ export default function VoiceRecorder({chatSession, session}) {
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [originalAudioURLs, setOriginalAudioURLs] = useState([]);
   const [serverAudioURLs, setServerAudioURLs] = useState([]);
+  const [originalTranscriptions, setOriginalTranscriptions] = useState([]);
+  const [serverTranscriptions, setServerTranscriptions] = useState([]);
   const [isServerResponding, setIsServerResponding] = useState(false);
   const audioEls = useRef([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -90,10 +95,14 @@ export default function VoiceRecorder({chatSession, session}) {
       method: "POST",
       body: formData
     });
+    const responseData = await response.json();
 
-    const audioResponse = await response.blob();
+    const audioResponse = new Blob([new Uint8Array(responseData.audioBuffer.data)], { type: 'audio/mp3' });
     const responseURL = URL.createObjectURL(audioResponse);
+    
     setServerAudioURLs(prevURLs => [...prevURLs, responseURL]);
+    setOriginalTranscriptions(prevTrans => [...prevTrans, responseData.transcription]);  // Assuming responseData has the original transcription.
+    setServerTranscriptions(prevTrans => [...prevTrans, responseData.aiResponse]);  // Assuming responseData has the AI response as transcription.    
   };
 
   useEffect(() => {
@@ -128,10 +137,12 @@ export default function VoiceRecorder({chatSession, session}) {
 
       const responseData = await response.json();
 
-      // Extract the audio, transcribed text, and AI response text
       const audioResponse = new Blob([new Uint8Array(responseData.audioBuffer.data)], { type: 'audio/mp3' });
       const responseURL = URL.createObjectURL(audioResponse);
+      
       setServerAudioURLs(prevURLs => [...prevURLs, responseURL]);
+      setOriginalTranscriptions(prevTrans => [...prevTrans, responseData.transcription]);  // Assuming responseData has the original transcription.
+      setServerTranscriptions(prevTrans => [...prevTrans, responseData.aiResponse]);
       
       // Display the transcribed text and AI response text somewhere in your UI
       console.log("Transcribed Audio:", responseData.transcription);
@@ -174,24 +185,24 @@ export default function VoiceRecorder({chatSession, session}) {
   return (
     <Box className="voice-recorder w-1/2 h-[80vh] py-4 mt-4" display="flex" flexDirection="column">
       <Box flexGrow={1} className="accordion-window w-[40vw]">
-        {originalAudioURLs.map((url, index) => (
-          <Box 
-            key={index} 
-            className="accordion-container original"
-            ref={index === originalAudioURLs.length - 1 ? lastAccordionRef : null}  
-          >
-            <AccordionElement url={url} label='Original Recording' audioEls={audioEls} id={`original-${index}`} />
-          </Box>
-        ))}
+      {originalAudioURLs.map((url, index) => (
+  <Box 
+    key={index} 
+    className="accordion-container original"
+    ref={index === originalAudioURLs.length - 1 ? lastAccordionRef : null}  
+  >
+    <AccordionElement url={url} label='Original Recording' audioEls={audioEls} id={`original-${index}`} transcription={originalTranscriptions[index]} />
+  </Box>
+))}
 
-        {serverAudioURLs.map((url, index) => (
-          <Box 
-            key={index} 
-            className="accordion-container server"
-          >
-            <AccordionElement url={url} label='Interviewer' audioEls={audioEls} id={`server-${index}`} />
-          </Box>
-        ))}
+{serverAudioURLs.map((url, index) => (
+  <Box 
+    key={index} 
+    className="accordion-container server"
+  >
+    <AccordionElement url={url} label='Interviewer' audioEls={audioEls} id={`server-${index}`} transcription={serverTranscriptions[index]} />
+  </Box>
+))}
       </Box>
 
       {isServerResponding && <LoadingSpinner />}
