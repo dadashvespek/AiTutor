@@ -1,10 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, Box } from '@mui/material';
 import { Mic, Stop, ExpandMore } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
 import LoadingSpinner from './LoadingSpinner';
 import './VoiceRecorder.css';
 import interviewTipsByLanguage from './Interviewtips';
+import ChatContext from '../utils/ChatContext';
 const AccordionElement = ({ url, label, audioEls, id, isServerResponding, transcription }) => {
   return (
     <Accordion className={label === 'Original Recording' ? "accordion-root original" : "accordion-root server"}>
@@ -67,8 +68,9 @@ const RecordingButton = ({ recording, handleStopRecording, handleStartRecording,
   )
 };
 export default function VoiceRecorder({chatSession, session}) {
-  const [recording, setRecording] = useState(false);
+  const [recording, setRecording] = useState(false);  
   const [mediaRecorder, setMediaRecorder] = useState(null);
+  const { messages, setMessages } = useContext(ChatContext);
   const [originalAudioURLs, setOriginalAudioURLs] = useState([]);
   const [serverAudioURLs, setServerAudioURLs] = useState([]);
   const [originalTranscriptions, setOriginalTranscriptions] = useState([]);
@@ -80,6 +82,42 @@ export default function VoiceRecorder({chatSession, session}) {
   const lastAccordionRef = useRef(null);
   const hasCalledAPI = useRef(false);  // <-- Introduced ref here
   const userName = session.user.identities[0].identity_data.name;
+
+  const sendCodetoServer = async (code) => {
+   
+      const formData = new FormData();
+    const emptyBlob = new Blob([''], { type: 'audio/webm' });
+    formData.append('audio', emptyBlob);
+    formData.append('type', chatSession.type);
+    formData.append('difficulty', chatSession.difficulty);
+    formData.append('language', chatSession.language.value);
+    console.log(`language: ${chatSession.language.value}`)
+    formData.append('userName', userName);
+    formData.append('code', code);
+
+    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}audio`, {
+      method: "POST",
+      body: formData
+    });
+    console.log("response:", response)
+    const responseData = await response.json();
+
+    const audioResponse = new Blob([new Uint8Array(responseData.audioBuffer.data)], { type: 'audio/mp3' });
+    const responseURL = URL.createObjectURL(audioResponse);
+    
+    setServerAudioURLs(prevURLs => [...prevURLs, responseURL]);
+    setOriginalTranscriptions(prevTrans => [...prevTrans, responseData.transcription]);  // Assuming responseData has the original transcription.
+    setServerTranscriptions(prevTrans => [...prevTrans, responseData.aiResponse]);  // Assuming responseData has the AI response as transcription. 
+
+  }
+
+
+  useEffect(() => {
+    if (messages.length > 0) {
+    sendCodetoServer(messages[messages.length - 1]);}
+    console.log("messages", messages);
+  }
+  , [messages]);
 
   const sendEmptyAudioFileToServer = async () => {
     const formData = new FormData();

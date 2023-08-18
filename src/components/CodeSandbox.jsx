@@ -131,15 +131,12 @@ const CodeSandbox = ({ language, chatSession }) => {
           ]);
           console.log("messages", messages);
         }
+        //Voice magic has to happen here
         if (chatType == "voice") {
-          const wowresponse = await fetch(`${import.meta.env.VITE_SERVER_URL}audio`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              code: code,
-              output: atob(response.data.stdout),
-            }),
-          });
+          setMessages([
+            ...messages, code
+          ]);
+          console.log("messages", messages);
         }
         return;
       }
