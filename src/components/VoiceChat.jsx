@@ -4,7 +4,8 @@ import { Mic, Stop, ExpandMore } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
 import LoadingSpinner from './LoadingSpinner';
 import './VoiceRecorder.css';
-const AccordionElement = ({ url, label, audioEls, id, isServerResponding }) => {
+import interviewTipsByLanguage from './Interviewtips';
+const AccordionElement = ({ url, label, audioEls, id, isServerResponding, transcription }) => {
   return (
     <Accordion className={label === 'Original Recording' ? "accordion-root original" : "accordion-root server"}>
       <AccordionSummary 
@@ -18,12 +19,44 @@ const AccordionElement = ({ url, label, audioEls, id, isServerResponding }) => {
         {
           isServerResponding ?
             <CircularProgress /> :
-            <audio ref={el => audioEls.current[id] = el} src={url} controls autoPlay={label === 'Interviewer'} />
+            <>
+              <audio ref={el => audioEls.current[id] = el} src={url} controls autoPlay={label === 'Interviewer'} />
+              <Typography variant="body2" className="transcription-text">{transcription}</Typography>
+            </>
         }
       </AccordionDetails>
     </Accordion>
   ) 
 };
+
+
+
+function InterviewBanner({ isServerResponding, language }) {
+  const [currentTipIndex, setCurrentTipIndex] = useState(0);
+
+  const interviewTips = interviewTipsByLanguage[language] || [];
+  
+  useEffect(() => {
+    if (isServerResponding) {
+      const interval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * interviewTips.length);
+        setCurrentTipIndex(randomIndex);
+      }, 12000);
+
+      return () => clearInterval(interval);
+    }
+  }, [isServerResponding, interviewTips.length]);
+
+  if (!isServerResponding || interviewTips.length === 0) return null;
+
+  return (
+    <div className={`banner fade-in scrolling-banner`}>
+      <span className="tip-title">{interviewTips[currentTipIndex]}</span>
+    </div>
+  );
+}
+
+
 
 
 const RecordingButton = ({ recording, handleStopRecording, handleStartRecording, isServerResponding }) => {
@@ -38,12 +71,16 @@ export default function VoiceRecorder({chatSession, session}) {
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [originalAudioURLs, setOriginalAudioURLs] = useState([]);
   const [serverAudioURLs, setServerAudioURLs] = useState([]);
+  const [originalTranscriptions, setOriginalTranscriptions] = useState([]);
+  const [serverTranscriptions, setServerTranscriptions] = useState([]);
   const [isServerResponding, setIsServerResponding] = useState(false);
   const audioEls = useRef([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const lastAccordionRef = useRef(null);
+  const hasCalledAPI = useRef(false);  // <-- Introduced ref here
   const userName = session.user.identities[0].identity_data.name;
+
   const sendEmptyAudioFileToServer = async () => {
     const formData = new FormData();
     const emptyBlob = new Blob([''], { type: 'audio/webm' });
@@ -51,25 +88,33 @@ export default function VoiceRecorder({chatSession, session}) {
     formData.append('type', chatSession.type);
     formData.append('difficulty', chatSession.difficulty);
     formData.append('language', chatSession.language.value);
+    console.log(`language: ${chatSession.language.value}`)
     formData.append('userName', userName);
 
     const response = await fetch(`${import.meta.env.VITE_SERVER_URL}audio`, {
       method: "POST",
       body: formData
     });
+    const responseData = await response.json();
 
-    const audioResponse = await response.blob();
+    const audioResponse = new Blob([new Uint8Array(responseData.audioBuffer.data)], { type: 'audio/mp3' });
     const responseURL = URL.createObjectURL(audioResponse);
+    
     setServerAudioURLs(prevURLs => [...prevURLs, responseURL]);
+    setOriginalTranscriptions(prevTrans => [...prevTrans, responseData.transcription]);  // Assuming responseData has the original transcription.
+    setServerTranscriptions(prevTrans => [...prevTrans, responseData.aiResponse]);  // Assuming responseData has the AI response as transcription.    
   };
 
   useEffect(() => {
-    sendEmptyAudioFileToServer();
+    if (!hasCalledAPI.current) {
+      sendEmptyAudioFileToServer();
+      hasCalledAPI.current = true; 
+    }
   }, []);
+
   const handleStartRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const newMediaRecorder = new MediaRecorder(stream, {mimeType: 'audio/webm'});
-    
     
     newMediaRecorder.start();
 
@@ -90,9 +135,18 @@ export default function VoiceRecorder({chatSession, session}) {
         body: formData
       });
 
-      const audioResponse = await response.blob();
+      const responseData = await response.json();
+
+      const audioResponse = new Blob([new Uint8Array(responseData.audioBuffer.data)], { type: 'audio/mp3' });
       const responseURL = URL.createObjectURL(audioResponse);
+      
       setServerAudioURLs(prevURLs => [...prevURLs, responseURL]);
+      setOriginalTranscriptions(prevTrans => [...prevTrans, responseData.transcription]);  // Assuming responseData has the original transcription.
+      setServerTranscriptions(prevTrans => [...prevTrans, responseData.aiResponse]);
+      
+      // Display the transcribed text and AI response text somewhere in your UI
+      console.log("Transcribed Audio:", responseData.transcription);
+      console.log("OpenAI Response:", responseData.aiResponse);
     };
 
     setMediaRecorder(newMediaRecorder);
@@ -128,27 +182,27 @@ export default function VoiceRecorder({chatSession, session}) {
   const originalAudioEls = useRef([]);
   const serverAudioEls = useRef([]);
   
- return (
-    <Box className="voice-recorder w-1/2 h-[86vh] py-4 mt-4" display="flex" flexDirection="column">
+  return (
+    <Box className="voice-recorder w-1/2 h-[80vh] py-4 mt-4" display="flex" flexDirection="column">
       <Box flexGrow={1} className="accordion-window w-[40vw]">
-        {originalAudioURLs.map((url, index) => (
-          <Box 
-            key={index} 
-            className="accordion-container original"
-            ref={index === originalAudioURLs.length - 1 ? lastAccordionRef : null}  
-          >
-            <AccordionElement url={url} label='Original Recording' audioEls={audioEls} id={`original-${index}`} />
-          </Box>
-        ))}
+      {originalAudioURLs.map((url, index) => (
+  <Box 
+    key={index} 
+    className="accordion-container original"
+    ref={index === originalAudioURLs.length - 1 ? lastAccordionRef : null}  
+  >
+    <AccordionElement url={url} label='Original Recording' audioEls={audioEls} id={`original-${index}`} transcription={originalTranscriptions[index]} />
+  </Box>
+))}
 
-        {serverAudioURLs.map((url, index) => (
-          <Box 
-            key={index} 
-            className="accordion-container server"
-          >
-            <AccordionElement url={url} label='Interviewer' audioEls={audioEls} id={`server-${index}`} />
-          </Box>
-        ))}
+{serverAudioURLs.map((url, index) => (
+  <Box 
+    key={index} 
+    className="accordion-container server"
+  >
+    <AccordionElement url={url} label='Interviewer' audioEls={audioEls} id={`server-${index}`} transcription={serverTranscriptions[index]} />
+  </Box>
+))}
       </Box>
 
       {isServerResponding && <LoadingSpinner />}
@@ -159,7 +213,9 @@ export default function VoiceRecorder({chatSession, session}) {
           {recording ? "Recording..." : "Click Mic to start recording"}
         </Typography>
       </Box>
+      <InterviewBanner isServerResponding={isServerResponding} language={chatSession.language.value} />
     </Box>
 );
+
 ;
 }

@@ -14,6 +14,8 @@ function Chat({ session, chatSession }) {
   const { messages, setMessages } = useContext(ChatContext);
   const [newMessage, setNewMessage] = useState("");
   const chatContainer = useRef(null);
+  const [isFirstMessage, setIsFirstMessage] = useState(true);
+
 
   const userName = session.user.identities[0].identity_data.name;
 
@@ -29,10 +31,17 @@ function Chat({ session, chatSession }) {
       id: generateUniqueId(),
       isTyping: true,
     };
+        if(isFirstMessage) {
+        setIsFirstMessage(false);
+    }
 
     if (isCodeMessage) setMessages([...messages, loadingMessage]);
-    else setMessages([...messages, userMessage, loadingMessage]);
-
+    if (!isFirstMessage) {
+      setMessages([...messages, userMessage, loadingMessage]);
+  } else {
+      setIsFirstMessage(false); // Set it to false now that the first message is being processed.
+      setMessages([...messages, loadingMessage]); // Only add the loading message
+  }
     let loadingEffectTimer = loadingEffect((loadingText) => {
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
@@ -118,8 +127,9 @@ function Chat({ session, chatSession }) {
     return (chatSession, sendMessage, messages) => {
       if (chatSession && messages.length === 0 && !hasSentWelcomeMessage) {
         const welcomeMessage = generateCodeMessage(
-          `i want you to act as a programming tutor. you will ask me a ${chatSession.difficulty} ${chatSession.language.name} problem, i will provide my code and the ouput in the next prompt, and then we will discuss it after that. my name is ${userName}. lets start!`
-        );
+        `FIRST | Hey ${userName}, I'm an AI interviewer and I'll be interviewing you for today for a role that requires knowledge of ${chatSession.language.name} and is of ${chatSession.difficulty} difficulty`
+
+          );
         sendMessage(welcomeMessage.message);
         hasSentWelcomeMessage = true;
       }
@@ -159,19 +169,13 @@ function Chat({ session, chatSession }) {
       alert("Failed to reset chat!");
     }
   };
-  
-  
-  
-  
-  
-  
 
   return (
     <div className="w-1/2 flex flex-col h-[88vh] justify-between">
       <div id="chat_container" className="overflow-auto" ref={chatContainer}>
-        {messages.map((message, index) => (
-          <Message key={index} messageData={message} />
-        ))}
+      {messages.map((message, index) => (
+    (index !== 0 || !isFirstMessage) && <Message key={index} messageData={message} />
+))}
       </div>
       <form onSubmit={handleSubmit}>
         <textarea
