@@ -8,6 +8,19 @@ import styled, { keyframes } from "styled-components";
 import { useSpring, animated } from "react-spring";
 import * as pdfjs from 'pdfjs-dist/build/pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.js';
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+function formatLanguage(string) {
+  switch (string.toLowerCase()) {
+    case 'cpp':
+      return 'C++';
+    case 'sql':
+      return 'SQL';
+    default:
+      return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+}
 
 function handleFileChange(event) {
   const file = event.target.files[0];
@@ -212,12 +225,14 @@ const NewSession = ({ session }) => {
                     )
                   }
                 >
-                  <option value="">Select Language</option>
-                  {languageOptions.map((lang) => (
-                    <option key={lang.id} value={lang.value}>
-                      {lang.value}
-                    </option>
-                  ))}
+<option value="">Select Language</option>
+{languageOptions.map((lang) => (
+  <option key={lang.id} value={formatLanguage(lang.value)}>
+    {formatLanguage(lang.value)}
+  </option>
+))}
+
+
                 </Input>
               </div>
               <div>
