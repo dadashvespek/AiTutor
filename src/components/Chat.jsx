@@ -9,6 +9,8 @@ import {
   loadingEffect,
   typingEffect,
 } from "../utils/chatUtils";
+import { classnames } from "../utils/general";
+
 
 function Chat({ session, chatSession }) {
   const { messages, setMessages } = useContext(ChatContext);
@@ -177,7 +179,7 @@ function Chat({ session, chatSession }) {
     (index !== 0 || !isFirstMessage) && <Message key={index} messageData={message} />
 ))}
       </div>
-      <form onSubmit={handleSubmit}>
+      <form className="rounded-md" onSubmit={handleSubmit}>
         <textarea
           name="prompt"
           rows="1"
@@ -186,9 +188,18 @@ function Chat({ session, chatSession }) {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
         />
-        <button type="submit">Send</button>
-        <button onClick={(e) => { e.preventDefault(); resetChat(); }}>Reset Chat</button>
-
+        {/* <button onClick={(e) => { e.preventDefault(); resetChat(); }}>Reset Chat</button> */}
+        <div className="flex flex-row space-x-4 items-start">
+      <button
+    type="submit"
+        className={classnames(
+          "border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0",
+          !messages ? "opacity-50" : ""
+        )}
+      >
+        Send
+      </button>
+    </div>
       </form>
     </div>
   );

@@ -15,7 +15,7 @@ function Message({ messageData }) {
   }, [messageData]);
 
   return (
-    <div className={`wrapper ${messageData.isAI ? "ai" : ""}`}>
+    <div className={`rounded-md wrapper ${messageData.isAI ? "ai" : ""}`}>
       <div className="chat">
         <div className="profile">
           <img
