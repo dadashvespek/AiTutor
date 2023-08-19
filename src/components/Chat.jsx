@@ -10,7 +10,18 @@ import {
   typingEffect,
 } from "../utils/chatUtils";
 import { classnames } from "../utils/general";
-
+function formatLanguage(string) {
+  switch (string.toLowerCase()) {
+    case 'cpp':
+      return 'C++';
+    case 'sql':
+      return 'SQL';
+    case 'php':
+      return 'PHP';
+    default:
+      return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+}
 
 function Chat({ session, chatSession }) {
   const { messages, setMessages } = useContext(ChatContext);
@@ -136,7 +147,7 @@ function Chat({ session, chatSession }) {
     return (chatSession, sendMessage, messages) => {
       if (chatSession && messages.length === 0 && !hasSentWelcomeMessage) {
         const welcomeMessage = generateCodeMessage(
-          `FIRST |${properUserName}|${chatSession.language.value}|${chatSession.difficulty}`
+          `FIRST |${properUserName}|${formatLanguage(chatSession.language.value)}|${chatSession.difficulty}`
 
           );
         sendMessage(welcomeMessage.message);
