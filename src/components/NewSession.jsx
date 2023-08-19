@@ -6,6 +6,37 @@ import { languageOptions } from "../constants/languageOptions";
 import ChatContext from "../utils/ChatContext";
 import styled, { keyframes } from "styled-components";
 import { useSpring, animated } from "react-spring";
+import * as pdfjs from 'pdfjs-dist/build/pdf';
+pdfjs.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.js';
+
+function handleFileChange(event) {
+  const file = event.target.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+      const typedArray = new Uint8Array(event.target.result);
+
+      const loadingTask = window.pdfjsLib.getDocument({ data: typedArray });
+      loadingTask.promise.then(pdf => {
+        console.log('Number of pages:', pdf.numPages);
+        
+        pdf.getPage(1).then(page => {
+          page.getTextContent().then(textContent => {
+            const strings = textContent.items.map(item => item.str);
+            console.log(strings.join(' '));
+          });
+        });
+      }).catch(error => {
+        console.error('Error processing PDF:', error);
+      });
+    };
+
+    reader.readAsArrayBuffer(file);
+  }
+}
+
 
 
 
@@ -96,6 +127,8 @@ const NewSession = ({ session }) => {
   const [messages, setMessages] = useState([]);
   const [sessionType, setSessionType] = useState("chat");
   const [difficulty, setDifficulty] = useState("easy");
+  const [resumeFile, setResumeFile] = useState(null);
+
   const [language, setLanguage] = useState({
     id: 63,
     name: "JavaScript (Node.js 12.14.0)",
@@ -189,6 +222,15 @@ const NewSession = ({ session }) => {
                   ))}
                 </Input>
               </div>
+              <div>
+  <label htmlFor="resumeUpload">Upload Resume (Optional, PDF only):</label>
+  <input
+    type="file"
+    id="resumeUpload"
+    accept=".pdf"
+    onChange={handleFileChange}
+  />
+</div>
               <Button type="submit">Start Session</Button>
             </Form>
           )}
@@ -197,5 +239,6 @@ const NewSession = ({ session }) => {
     </ChatContext.Provider>
   );
 };
+ 
 
 export default NewSession;
