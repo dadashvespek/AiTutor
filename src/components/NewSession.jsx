@@ -158,7 +158,7 @@ const NewSession = ({ session }) => {
   return (
     <ChatContext.Provider value={{ messages, setMessages }}>
       <Wrapper>
-        <animated.div style={animation}>
+        <animated.div className= "w-full" style={animation}>
           {chatSession ? (
             <div className="flex">
               {sessionType === "chat" ? (
