@@ -16,8 +16,14 @@ function Chat({ session, chatSession }) {
   const chatContainer = useRef(null);
   const [isFirstMessage, setIsFirstMessage] = useState(true);
 
-
   const userName = session.user.identities[0].identity_data.name;
+
+  function capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  }
+  
+  const properUserName = userName.split(' ').map(capitalizeFirstLetter).join(' ');
+  
 
   useEffect(() => {
     console.log("messages", messages);
@@ -127,7 +133,7 @@ function Chat({ session, chatSession }) {
     return (chatSession, sendMessage, messages) => {
       if (chatSession && messages.length === 0 && !hasSentWelcomeMessage) {
         const welcomeMessage = generateCodeMessage(
-        `FIRST | Hey ${userName}, I'm an AI interviewer and I'll be interviewing you for today for a role that requires knowledge of ${chatSession.language.name} and is of ${chatSession.difficulty} difficulty`
+          `FIRST |${properUserName}|${chatSession.language.value}|${chatSession.difficulty}`
 
           );
         sendMessage(welcomeMessage.message);
