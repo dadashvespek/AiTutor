@@ -215,7 +215,7 @@ const NewSession = ({ session }) => {
                   <option value="">Select Language</option>
                   {languageOptions.map((lang) => (
                     <option key={lang.id} value={lang.value}>
-                      {lang.name}
+                      {lang.value}
                     </option>
                   ))}
                 </Input>
