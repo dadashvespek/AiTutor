@@ -17,10 +17,13 @@ function formatLanguage(string) {
       return 'C++';
     case 'sql':
       return 'SQL';
+    case 'php':
+      return 'PHP';
     default:
       return string.charAt(0).toUpperCase() + string.slice(1);
   }
 }
+
 
 function handleFileChange(event) {
   const file = event.target.files[0];

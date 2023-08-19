@@ -199,12 +199,12 @@ export const languageOptions = [
   //   label: "Perl (5.28.1)",
   //   value: "perl",
   // },
-  // {
-  //   id: 68,
-  //   name: "PHP (7.4.1)",
-  //   label: "PHP (7.4.1)",
-  //   value: "php",
-  // },
+  {
+    id: 68,
+    name: "PHP (7.4.1)",
+    label: "PHP (7.4.1)",
+    value: "php",
+  },
   // {
   //   id: 43,
   //   label: "Plain Text",
@@ -241,12 +241,12 @@ export const languageOptions = [
   //   label: "Ruby (2.7.0)",
   //   value: "ruby",
   // },
-  // {
-  //   id: 73,
-  //   name: "Rust (1.40.0)",
-  //   label: "Rust (1.40.0)",
-  //   value: "rust",
-  // },
+  {
+    id: 73,
+    name: "Rust (1.40.0)",
+    label: "Rust (1.40.0)",
+    value: "rust",
+  },
   // {
   //   id: 81,
   //   name: "Scala (2.13.2)",
@@ -259,18 +259,18 @@ export const languageOptions = [
     label: "SQL (SQLite 3.27.2)",
     value: "sql",
   },
-  // {
-  //   id: 83,
-  //   name: "Swift (5.2.3)",
-  //   label: "Swift (5.2.3)",
-  //   value: "swift",
-  // },
-  // {
-  //   id: 74,
-  //   name: "TypeScript (3.7.4)",
-  //   label: "TypeScript (3.7.4)",
-  //   value: "typescript",
-  // },
+  {
+    id: 83,
+    name: "Swift (5.2.3)",
+    label: "Swift (5.2.3)",
+    value: "swift",
+  },
+  {
+    id: 74,
+    name: "TypeScript (3.7.4)",
+    label: "TypeScript (3.7.4)",
+    value: "typescript",
+  },
   // {
   //   id: 84,
   //   name: "Visual Basic.Net (vbnc 0.0.0.5943)",
