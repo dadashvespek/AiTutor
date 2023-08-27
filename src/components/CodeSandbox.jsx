@@ -124,7 +124,7 @@ const CodeSandbox = ({ language, chatSession }) => {
           setMessages([
             ...messages,
             generateCodeMessage(
-              `here is the user's code ${code} and here is the output from executing their code ${atob(
+              `This code was submitted through the compiler by the interviewee: ${code} and here is the output from the compiler after executing their code: ${atob(
                 response.data.stdout
               )}`
             ),

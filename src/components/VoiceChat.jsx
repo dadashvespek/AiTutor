@@ -248,7 +248,7 @@ export default function VoiceRecorder({chatSession, session}) {
       <Box className="recording-control">
         <RecordingButton recording={recording} handleStopRecording={handleStopRecording} handleStartRecording={handleStartRecording} isServerResponding={isServerResponding} />
         <Typography variant="subtitle1" paddingLeft="1rem">
-          {recording ? "Recording..." : "Click Mic to start recording"}
+          {recording ? "Click to stop recording" : "Click Mic to start recording"}
         </Typography>
       </Box>
       <InterviewBanner isServerResponding={isServerResponding} language={chatSession.language.value} />

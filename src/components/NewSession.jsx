@@ -201,7 +201,7 @@ const NewSession = ({ session }) => {
                   value={sessionType}
                   onChange={(e) => setSessionType(e.target.value)}
                 >
-                  <option value="">Select Session Type</option>
+                  <option value="">Select Interview Type</option>
                   <option value="chat">Chat</option>
                   <option value="voice">Voice</option>
                 </Input>
