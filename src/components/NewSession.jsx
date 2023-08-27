@@ -193,7 +193,7 @@ const NewSession = ({ session }) => {
             <Form onSubmit={startSession}>
               <Title>Welcome {userName}</Title>
               <Description>
-                What type of session would you like to start?
+                What type of interview would you like to start?
               </Description>
               <div>
                 <Input
@@ -247,7 +247,7 @@ const NewSession = ({ session }) => {
     onChange={handleFileChange}
   />
 </div>
-              <Button type="submit">Start Session</Button>
+              <Button type="submit">Start Interview</Button>
             </Form>
           )}
         </animated.div>
