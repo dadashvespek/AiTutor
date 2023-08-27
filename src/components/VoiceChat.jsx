@@ -8,7 +8,7 @@ import interviewTipsByLanguage from './Interviewtips';
 import ChatContext from '../utils/ChatContext';
 const AccordionElement = ({ url, label, audioEls, id, isServerResponding, transcription }) => {
   return (
-    <Accordion className={label === {userName} ? "accordion-root original" : "accordion-root server"}>
+    <Accordion className={label === 'Original Recording' ? "accordion-root original" : "accordion-root server"}>
       <AccordionSummary 
         className="accordion-summary" 
         expandIcon={<ExpandMore />} 
@@ -229,7 +229,7 @@ export default function VoiceRecorder({chatSession, session}) {
     className="accordion-container original"
     ref={index === originalAudioURLs.length - 1 ? lastAccordionRef : null}  
   >
-    <AccordionElement url={url} label={userName} audioEls={audioEls} id={`original-${index}`} transcription={originalTranscriptions[index]} />
+    <AccordionElement url={url} label='Original Recording' audioEls={audioEls} id={`original-${index}`} transcription={originalTranscriptions[index]} />
   </Box>
 ))}
 
