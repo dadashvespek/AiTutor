@@ -239,13 +239,13 @@ const NewSession = ({ session }) => {
                 </Input>
               </div>
               <div>
-  <label htmlFor="resumeUpload">Upload Resume (Optional, PDF only):</label>
+  {/* <label htmlFor="resumeUpload">Upload Resume (Optional, PDF only):</label>
   <input
     type="file"
     id="resumeUpload"
     accept=".pdf"
     onChange={handleFileChange}
-  />
+  /> */}
 </div>
               <Button type="submit">Start Interview</Button>
             </Form>
