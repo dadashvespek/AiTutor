@@ -14,13 +14,13 @@ body {
 
 .accordion-window {
   overflow-y: scroll;
-  /* height: calc(100vh - 80px); */
+  height: calc(70vh - 80px);
   margin-bottom: 1rem;
   scrollbar-width: none; /* For Firefox */
 }
 
 .accordion-window::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari and Opera */
+  display: none;
 }
 
 .accordion-container {
