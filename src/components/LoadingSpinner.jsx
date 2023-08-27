@@ -1,8 +1,12 @@
 const LoadingSpinner = () => (
-    <div className="spinner">
-      <div className="double-bounce1"></div>
-      <div className="double-bounce2"></div>
-    </div>
-  );
-  
-  export default LoadingSpinner;
+  <div className="loadingio-spinner-double-ring-zgzxhburbym">
+      <div className="ldio-h1iq9u09xeo">
+          <div></div>
+          <div></div>
+          <div><div></div></div>
+          <div><div></div></div>
+      </div>
+  </div>
+);
+
+export default LoadingSpinner;
