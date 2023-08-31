@@ -50,14 +50,16 @@ function Chat({ session, chatSession }) {
       id: generateUniqueId(),
       isTyping: true,
     };
-    if (isFirstMessage) {
+
+    if (isFirstMessage && isCodeMessage) {
       setIsFirstMessage(false);
-      setMessages([...messages, loadingMessage]);
+      setMessages([...messages, userMessage, loadingMessage]);
   } else if (isCodeMessage) {
       setMessages([...messages, userMessage, loadingMessage]);
   } else {
       setMessages([...messages, loadingMessage]);
   }
+  
   
     let loadingEffectTimer = loadingEffect((loadingText) => {
       setMessages((prevMessages) =>
@@ -133,14 +135,11 @@ function Chat({ session, chatSession }) {
     }
   }, [messages]);
 
-  // const [lastMessageSent, setLastMessageSent] = useState(null);
-
-  // useEffect(() => {
-  //     if (messages.length > 1 && !messages[messages.length - 1].isAI && messages[messages.length - 1] !== lastMessageSent) {
-  //         sendMessage(messages[messages.length - 1].message, true);
-  //         setLastMessageSent(messages[messages.length - 1]);
-  //     }
-  // }, [messages]);
+  useEffect(() => {
+    if (messages.length > 1 && !messages[messages.length - 1].isAI) {
+      sendMessage(messages[messages.length - 1].message, true);
+    }
+  }, [messages]);
 
   const sendWelcomeMessage = (() => {
     let hasSentWelcomeMessage = false;
