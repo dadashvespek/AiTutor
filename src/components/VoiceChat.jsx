@@ -56,7 +56,10 @@ function InterviewBanner({ isServerResponding, language }) {
     </div>
   );
 }
-
+const playCheckCodeAudio = () => {
+  const audio = new Audio('/checkcode.mp3');  // Adjust path if it's located elsewhere.
+  audio.play();
+};
 
 
 
@@ -84,7 +87,7 @@ export default function VoiceRecorder({chatSession, session}) {
   const userName = session.user.identities[0].identity_data.name;
 
   const sendCodetoServer = async (code) => {
-   
+    playCheckCodeAudio();
       const formData = new FormData();
     const emptyBlob = new Blob([''], { type: 'audio/webm' });
     formData.append('audio', emptyBlob);
