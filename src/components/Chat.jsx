@@ -133,14 +133,14 @@ function Chat({ session, chatSession }) {
     }
   }, [messages]);
 
-  const [lastMessageSent, setLastMessageSent] = useState(null);
+  // const [lastMessageSent, setLastMessageSent] = useState(null);
 
-  useEffect(() => {
-      if (messages.length > 1 && !messages[messages.length - 1].isAI && messages[messages.length - 1] !== lastMessageSent) {
-          sendMessage(messages[messages.length - 1].message, true);
-          setLastMessageSent(messages[messages.length - 1]);
-      }
-  }, [messages]);
+  // useEffect(() => {
+  //     if (messages.length > 1 && !messages[messages.length - 1].isAI && messages[messages.length - 1] !== lastMessageSent) {
+  //         sendMessage(messages[messages.length - 1].message, true);
+  //         setLastMessageSent(messages[messages.length - 1]);
+  //     }
+  // }, [messages]);
 
   const sendWelcomeMessage = (() => {
     let hasSentWelcomeMessage = false;
