@@ -5,7 +5,6 @@ import { CircularProgress } from '@mui/material';
 import LoadingSpinner from './LoadingSpinner';
 import './VoiceRecorder.css';
 import interviewTipsByLanguage from './Interviewtips';
-import checkCodeAudio from './checkcode.mp3';
 import ChatContext from '../utils/ChatContext';
 const AccordionElement = ({ url, label, audioEls, id, isServerResponding, transcription }) => {
   return (
@@ -115,7 +114,6 @@ export default function VoiceRecorder({chatSession, session}) {
 
   useEffect(() => {
     if (messages.length > 0) {
-      audioRef.current.play();
     sendCodetoServer(messages[messages.length - 1]);}
     console.log("messages", messages);
   }
