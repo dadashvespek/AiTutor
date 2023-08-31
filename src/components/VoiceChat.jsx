@@ -57,8 +57,17 @@ function InterviewBanner({ isServerResponding, language }) {
   );
 }
 const playCheckCodeAudio = () => {
-  const audio = new Audio('/checkcode.mp3');  // Adjust path if it's located elsewhere.
-  audio.play();
+  const audio = new Audio('./checkcode.mp3');
+  
+  audio.oncanplaythrough = () => {
+    audio.play().catch(e => {
+      console.error("Error playing audio:", e);
+    });
+  };
+
+  audio.onerror = (error) => {
+    console.error("Error loading the audio file:", error);
+  };
 };
 
 
