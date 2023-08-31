@@ -54,7 +54,15 @@ function Chat({ session, chatSession }) {
         if(isFirstMessage) {
         setIsFirstMessage(false);
     }
+    if (isCodeMessage) {
 
+      if (messages.length > 0 && messages[messages.length - 1].message === message) {
+          return;
+      }
+  
+      setMessages([...messages, loadingMessage]);
+  }
+  
     if (isCodeMessage) setMessages([...messages, loadingMessage]);
     if (!isFirstMessage) {
       setMessages([...messages, userMessage, loadingMessage]);
