@@ -88,6 +88,7 @@ function Chat({ session, chatSession }) {
       });
 
       if (response.ok) {
+        setCodeMessageSent(false);
         clearInterval(loadingEffectTimer);
         const data = await response.json();
         const parsedData = data.bot.trim();
