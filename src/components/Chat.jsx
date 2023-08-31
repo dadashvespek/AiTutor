@@ -28,6 +28,7 @@ function Chat({ session, chatSession }) {
   const [newMessage, setNewMessage] = useState("");
   const chatContainer = useRef(null);
   const [isFirstMessage, setIsFirstMessage] = useState(true);
+  const [codeMessageSent, setCodeMessageSent] = useState(false);
 
   const userName = session.user.identities[0].identity_data.name;
 
@@ -51,16 +52,18 @@ function Chat({ session, chatSession }) {
       isTyping: true,
     };
 
-    if (isFirstMessage && isCodeMessage) {
+    if (isFirstMessage) {
       setIsFirstMessage(false);
-      setMessages([...messages, userMessage, loadingMessage]);
-  } else if (isCodeMessage) {
+      setMessages([...messages, loadingMessage]);
+  } else if (isCodeMessage && codeMessageSent) {
+    
       setMessages([...messages, userMessage, loadingMessage]);
   } else {
       setMessages([...messages, loadingMessage]);
   }
-  
-  
+  if (isCodeMessage) {
+    setCodeMessageSent(true);
+}
     let loadingEffectTimer = loadingEffect((loadingText) => {
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
