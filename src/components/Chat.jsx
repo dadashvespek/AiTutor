@@ -28,7 +28,6 @@ function Chat({ session, chatSession }) {
   const [newMessage, setNewMessage] = useState("");
   const chatContainer = useRef(null);
   const [isFirstMessage, setIsFirstMessage] = useState(true);
-  const [processedMessages, setProcessedMessages] = useState([]);
 
   const userName = session.user.identities[0].identity_data.name;
 
@@ -54,15 +53,7 @@ function Chat({ session, chatSession }) {
         if(isFirstMessage) {
         setIsFirstMessage(false);
     }
-    if (isCodeMessage) {
 
-      if (messages.length > 0 && messages[messages.length - 1].message === message) {
-          return;
-      }
-  
-      setMessages([...messages, loadingMessage]);
-  }
-  
     if (isCodeMessage) setMessages([...messages, loadingMessage]);
     if (!isFirstMessage) {
       setMessages([...messages, userMessage, loadingMessage]);
@@ -145,14 +136,10 @@ function Chat({ session, chatSession }) {
   }, [messages]);
 
   useEffect(() => {
-    const lastMessage = messages[messages.length - 1];
-
-    if (messages.length > 1 && !lastMessage.isAI && !processedMessages.includes(lastMessage)) {
-        sendMessage(lastMessage.message, true);
-        setProcessedMessages(prevProcessed => [...prevProcessed, lastMessage]);
+    if (messages.length > 1 && !messages[messages.length - 1].isAI) {
+      sendMessage(messages[messages.length - 1].message, true);
     }
-}, [messages]);
-
+  }, [messages]);
 
   const sendWelcomeMessage = (() => {
     let hasSentWelcomeMessage = false;
