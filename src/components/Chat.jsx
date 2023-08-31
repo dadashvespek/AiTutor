@@ -50,10 +50,6 @@ function Chat({ session, chatSession }) {
       id: generateUniqueId(),
       isTyping: true,
     };
-        if(isFirstMessage) {
-        setIsFirstMessage(false);
-    }
-
     if (isFirstMessage) {
       setIsFirstMessage(false);
       setMessages([...messages, loadingMessage]);
@@ -137,10 +133,13 @@ function Chat({ session, chatSession }) {
     }
   }, [messages]);
 
+  const [lastMessageSent, setLastMessageSent] = useState(null);
+
   useEffect(() => {
-    if (messages.length > 1 && !messages[messages.length - 1].isAI) {
-      sendMessage(messages[messages.length - 1].message, true);
-    }
+      if (messages.length > 1 && !messages[messages.length - 1].isAI && messages[messages.length - 1] !== lastMessageSent) {
+          sendMessage(messages[messages.length - 1].message, true);
+          setLastMessageSent(messages[messages.length - 1]);
+      }
   }, [messages]);
 
   const sendWelcomeMessage = (() => {
