@@ -3,7 +3,6 @@ import { Accordion, AccordionDetails, AccordionSummary, IconButton, Typography, 
 import { Mic, Stop, ExpandMore } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
 import LoadingSpinner from './LoadingSpinner';
-import './checkcode.mp3';
 import './VoiceRecorder.css';
 import interviewTipsByLanguage from './Interviewtips';
 import ChatContext from '../utils/ChatContext';
