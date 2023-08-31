@@ -54,13 +54,15 @@ function Chat({ session, chatSession }) {
         setIsFirstMessage(false);
     }
 
-    if (isCodeMessage) setMessages([...messages, loadingMessage]);
-    if (!isFirstMessage) {
+    if (isFirstMessage) {
+      setIsFirstMessage(false);
+      setMessages([...messages, loadingMessage]);
+  } else if (isCodeMessage) {
       setMessages([...messages, userMessage, loadingMessage]);
   } else {
-      setIsFirstMessage(false); // Set it to false now that the first message is being processed.
-      setMessages([...messages, loadingMessage]); // Only add the loading message
+      setMessages([...messages, loadingMessage]);
   }
+  
     let loadingEffectTimer = loadingEffect((loadingText) => {
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
