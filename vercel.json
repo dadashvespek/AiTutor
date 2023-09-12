@@ -1,8 +1,0 @@
-{
-    "rewrites": [
-      { "source": "/ai-interviewer/_next/:path*", "destination": "/_next/:path*" },
-      { "source": "/ai-interviewer/assets/:path*", "destination": "/assets/:path*" },
-      { "source": "/ai-interviewer/:path*", "destination": "/:path*" }
-    ]
-  }
-  
