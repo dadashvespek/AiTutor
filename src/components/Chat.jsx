@@ -36,8 +36,8 @@ function Chat({ session, chatSession }) {
       return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
   
-  const properUserName = userName.split(' ').map(capitalizeFirstLetter).join(' ');
-  
+  // const properUserName = userName.split(' ').map(capitalizeFirstLetter).join(' ');
+  const properUserName = userName
 
   useEffect(() => {
     console.log("messages", messages);
