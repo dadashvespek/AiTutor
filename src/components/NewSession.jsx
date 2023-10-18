@@ -182,16 +182,16 @@ const NewSession = ({ session }) => {
                   <div className="chat interview screen">
                     <Chat session={session} chatSession={chatSession} />
                     <CodeSandbox chatSession={chatSession} language={language} />
-                    <Footer />
+                    
                   </div>
                 ) : (
                   <div className="chat interview screen">
                     <VoiceChat session={session} chatSession={chatSession} />
                     <CodeSandbox chatSession={chatSession} language={language} />
-                    <Footer />
+                    
                   </div>
                 )}
-                <Footer />
+                
 
               </div>
             ) : (
