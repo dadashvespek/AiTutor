@@ -150,7 +150,7 @@ const NewSession = ({ session }) => {
     value: "javascript",
   });
   const [chatSession, setChatSession] = useState(null);
-  const userName = session.user.identities[0].identity_data.name;
+  const userName = '';
 
   const startSession = (event) => {
     event.preventDefault();
