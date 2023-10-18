@@ -116,6 +116,17 @@ const Input = styled.select`
   background-color: #f9fafb;
   color: #111827;
 `;
+const FooterWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 1rem; /* adjust as needed */
+`;const SessionContainer = styled.div`
+display: flex;
+flex-direction: column;
+align-items: center;
+`;
 
 const Button = styled.button`
   padding: 0.75rem 1.25rem;
@@ -175,89 +186,92 @@ const NewSession = ({ session }) => {
   return (
     <ChatContext.Provider value={{ messages, setMessages }}>
       <Wrapper>
-        <animated.div className= "w-full" style={animation}>
+        <animated.div className="w-full" style={animation}>
           {chatSession ? (
-            <div className="flex">
-              {sessionType === "chat" ? (
-                <div className="chat interview screen">
-                  <Chat session={session} chatSession={chatSession} />
-                  <CodeSandbox chatSession={chatSession} language={language} />
-                  <Footer />
-                </div>
-              ) : (
-                <div className="chat interview screen">
-                  <VoiceChat session={session} chatSession={chatSession} />
-                  <CodeSandbox chatSession={chatSession} language={language} />
-                  <Footer />
-                </div>
-              )}
-            </div>
+            <SessionContainer className="chat interview screen">
+              <div className="flex">
+                {sessionType === "chat" ? (
+                  <>
+                    <Chat session={session} chatSession={chatSession} />
+                    <CodeSandbox chatSession={chatSession} language={language} />
+                  </>
+                ) : (
+                  <>
+                    <VoiceChat session={session} chatSession={chatSession} />
+                    <CodeSandbox chatSession={chatSession} language={language} />
+                  </>
+                )}
+              </div>
+              <FooterWrapper>
+                <Footer />
+              </FooterWrapper>
+            </SessionContainer>
           ) : (
-            <Form onSubmit={startSession}>
-              <Title>Welcome {userName}</Title>
-              <Description>
-                What type of interview would you like to start?
-              </Description>
-              <div>
-                <Input
-                  id="sessionType"
-                  value={sessionType}
-                  onChange={(e) => setSessionType(e.target.value)}
-                >
-                  <option value="">Select Interview Type</option>
-                  <option value="chat">Chat</option>
-                  <option value="voice">Voice</option>
-                </Input>
-              </div>
-              <div>
-                <Input
-                  id="difficulty"
-                  value={difficulty}
-                  onChange={(e) => setDifficulty(e.target.value)}
-                >
-                  <option value="">Select Difficulty</option>
-                  <option value="easy">Easy</option>
-                  <option value="medium">Medium</option>
-                  <option value="hard">Hard</option>
-                </Input>
-              </div>
-              <div>
-                <Input
-                  id="language"
-                  value={language.value}
-                  onChange={(e) =>
-                    setLanguage(
-                      languageOptions.find((opt) => opt.value === e.target.value)
-                    )
-                  }
-                >
-<option value="">Select Language</option>
-{languageOptions.map((lang) => (
-  <option key={lang.id} value={lang.value}>
-    {formatLanguage(lang.value)}
-  </option>
-))}
+              <Form onSubmit={startSession}>
+                <Title>Welcome {userName}</Title>
+                <Description>
+                  What type of interview would you like to start?
+                </Description>
+                <div>
+                  <Input
+                    id="sessionType"
+                    value={sessionType}
+                    onChange={(e) => setSessionType(e.target.value)}
+                  >
+                    <option value="">Select Interview Type</option>
+                    <option value="chat">Chat</option>
+                    <option value="voice">Voice</option>
+                  </Input>
+                </div>
+                <div>
+                  <Input
+                    id="difficulty"
+                    value={difficulty}
+                    onChange={(e) => setDifficulty(e.target.value)}
+                  >
+                    <option value="">Select Difficulty</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                  </Input>
+                </div>
+                <div>
+                  <Input
+                    id="language"
+                    value={language.value}
+                    onChange={(e) =>
+                      setLanguage(
+                        languageOptions.find((opt) => opt.value === e.target.value)
+                      )
+                    }
+                  >
+  <option value="">Select Language</option>
+  {languageOptions.map((lang) => (
+    <option key={lang.id} value={lang.value}>
+      {formatLanguage(lang.value)}
+    </option>
+  ))}
 
 
-                </Input>
-              </div>
-              <div>
-  {/* <label htmlFor="resumeUpload">Upload Resume (Optional, PDF only):</label>
-  <input
-    type="file"
-    id="resumeUpload"
-    accept=".pdf"
-    onChange={handleFileChange}
-  /> */}
-</div>
-              <Button type="submit">Start Interview</Button>
-            </Form>
-          )}
-        </animated.div>
-      </Wrapper>
-    </ChatContext.Provider>
-  );
-};
- 
+                  </Input>
+                </div>
+                <div>
+    {/* <label htmlFor="resumeUpload">Upload Resume (Optional, PDF only):</label>
+    <input
+      type="file"
+      id="resumeUpload"
+      accept=".pdf"
+      onChange={handleFileChange}
+    /> */}
+  </div>
+                <Button type="submit">Start Interview</Button>
+              </Form>
+            )}
+          </animated.div>
+        </Wrapper>
+      </ChatContext.Provider>
+    );
+  };
+  
 
-export default NewSession;
+  export default NewSession;
