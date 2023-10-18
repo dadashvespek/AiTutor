@@ -181,11 +181,13 @@ const NewSession = ({ session }) => {
                 <div className="chat interview screen">
                   <Chat session={session} chatSession={chatSession} />
                   <CodeSandbox chatSession={chatSession} language={language} />
+                  <p>&copy; 2023 Danial S. | <a href="https://www.linkedin.com/in/danial-s-13842411b/" target="_blank" style="text-decoration: none; color: #0A66C2; font-weight: bold;">LinkedIn</a></p>
                 </div>
               ) : (
                 <div className="chat interview screen">
                   <VoiceChat session={session} chatSession={chatSession} />
                   <CodeSandbox chatSession={chatSession} language={language} />
+                  <p>&copy; 2023 Danial S. | <a href="https://www.linkedin.com/in/danial-s-13842411b/" target="_blank" style="text-decoration: none; color: #0A66C2; font-weight: bold;">LinkedIn</a></p>
                 </div>
               )}
             </div>
