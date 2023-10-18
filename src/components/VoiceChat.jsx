@@ -107,7 +107,7 @@ export default function VoiceRecorder({chatSession, session}) {
     formData.append('userName', userName);
     formData.append('code', code);
 
-    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}audio`, {
+    const response = await fetch(`https://fuzzy-tank-top-seal.cyclic.app/audio`, {
       method: "POST",
       body: formData
     });
@@ -141,7 +141,7 @@ export default function VoiceRecorder({chatSession, session}) {
     console.log(`language: ${chatSession.language.value}`)
     formData.append('userName', userName);
 
-    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}audio`, {
+    const response = await fetch(`https://fuzzy-tank-top-seal.cyclic.app/audio`, {
       method: "POST",
       body: formData
     });
@@ -180,7 +180,7 @@ export default function VoiceRecorder({chatSession, session}) {
       
     
       console.log(formData);
-      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}audio`, {
+      const response = await fetch(`https://fuzzy-tank-top-seal.cyclic.app/audio`, {
         method: "POST",
         body: formData
       });
