@@ -116,17 +116,6 @@ const Input = styled.select`
   background-color: #f9fafb;
   color: #111827;
 `;
-const FooterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding-top: 1rem; /* adjust as needed */
-`;const SessionContainer = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-`;
 
 const Button = styled.button`
   padding: 0.75rem 1.25rem;
@@ -183,30 +172,29 @@ const NewSession = ({ session }) => {
   });
 
 
-  return (
-    <ChatContext.Provider value={{ messages, setMessages }}>
-      <Wrapper>
-        <animated.div className="w-full" style={animation}>
-          {chatSession ? (
-            <SessionContainer className="chat interview screen">
+    return (
+      <ChatContext.Provider value={{ messages, setMessages }}>
+        <Wrapper>
+          <animated.div className= "w-full" style={animation}>
+            {chatSession ? (
               <div className="flex">
                 {sessionType === "chat" ? (
-                  <>
+                  <div className="chat interview screen">
                     <Chat session={session} chatSession={chatSession} />
                     <CodeSandbox chatSession={chatSession} language={language} />
-                  </>
+                    <Footer />
+                  </div>
                 ) : (
-                  <>
+                  <div className="chat interview screen">
                     <VoiceChat session={session} chatSession={chatSession} />
                     <CodeSandbox chatSession={chatSession} language={language} />
-                  </>
+                    <Footer />
+                  </div>
                 )}
-              </div>
-              <FooterWrapper>
                 <Footer />
-              </FooterWrapper>
-            </SessionContainer>
-          ) : (
+
+              </div>
+            ) : (
               <Form onSubmit={startSession}>
                 <Title>Welcome {userName}</Title>
                 <Description>
